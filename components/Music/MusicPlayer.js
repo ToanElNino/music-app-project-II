@@ -18,13 +18,10 @@ const trackPlayerInit = async () => {
   return true;
 };
 
-// eslint-disable-next-line react-hooks/rules-of-hooks
-
 const MusicPlayer = () => {
   const [isTrackPlayerInit, setIsTrackPlayerInit] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   //initialize the TrackPlayer when the App component is mounted
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     const startPlayer = async () => {
       let isInit = await trackPlayerInit();
@@ -88,7 +85,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   optionButton: {
-    backgroundColor:'blue',
+    backgroundColor: 'blue',
     borderRadius: 30,
   },
 });
