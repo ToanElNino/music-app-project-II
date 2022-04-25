@@ -17,12 +17,30 @@ const LoginLayout = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
-  
   const [initializing, setInitializing] = useState(true);
 
-  const handleSubmitEvent = () => {
-    navigation.navigate('Music player', {name: 'Music player'});
+  const handleSubmitEvent = (email, password) => {
+    auth()
+      .signInWithEmailAndPassword(
+        'jane.doe@example.com',
+        'SuperSecretPassword!',
+      )
+      .then(() => {
+        console.log('Login success');
+      })
+      .catch(error => {
+        // if (error.code === 'auth/email-already-in-use') {
+        //   console.log('That email address is already in use!');
+        // }
+
+        // if (error.code === 'auth/invalid-email') {
+        //   console.log('That email address is invalid!');
+        // }
+
+        console.error(error);
+      });
   };
+  // navigation.navigate('Music player', {name: 'Music player'});
 
   return (
     <View style={styles.container}>

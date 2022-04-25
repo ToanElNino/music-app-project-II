@@ -1,52 +1,59 @@
-import React from 'react';
-import {StyleSheet} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React, {useState, useEffect} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import auth from '@react-native-firebase/auth';
 import LoginLayout from './components/auth/LogIn';
-import MusicPlayer from './components/Music/MusicPlayer';
-
-const Stack = createNativeStackNavigator();
 
 const App = () => {
+  // Set an initializing state whilst Firebase connects
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
+
+  // Handle user state changes
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  if (initializing) return null;
+
+  if (!user) {
+    return <LoginLayout />;
+  }
+  const handleLogout = (email, password) => {
+    auth()
+      .signOut()
+      .then(() => console.log('User signed out!'));
+  };
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Sign in"
-          component={LoginLayout}
-          options={{
-            title: 'Sign in',
-            headerStyle: {
-              backgroundColor: '#3A5BB3',
-            },
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-          }}
-        />
-        <Stack.Screen
-          name="Music player"
-          component={MusicPlayer}
-          options={{
-            title: 'Music Player', //Set Header Title
-            headerStyle: {
-              backgroundColor: '#3A5BB3', //Set Header color
-            },
-            headerTintColor: '#fff', //Set Header text color
-            headerTitleStyle: {
-              fontWeight: 'bold', //Set Header text style
-            },
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <View style={styles.container}>
+      <Text>Welcome {user.email}</Text>
+      <TouchableOpacity
+        style={styles.loginButton}
+        onPress={() => handleLogout()}>
+        <Text style={{color: 'white'}}>Log Out</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
+  },
+  loginButton: {
+    width: 220,
+    backgroundColor: '#3A5BB3',
+    padding: 10,
+    alignItems: 'center',
+    marginTop: 25,
+    borderRadius: 10,
   },
 });
 
