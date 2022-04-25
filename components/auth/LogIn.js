@@ -10,13 +10,15 @@ import {
   Image,
   Alert,
 } from 'react-native';
+import auth from '@react-native-firebase/auth';
 import {Checkbox} from 'react-native-paper';
 
 const LoginLayout = ({navigation}) => {
-  const [remember, setRemember] = useState(false);
-  // const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [remember, setRemember] = useState(false);
+  
+  const [initializing, setInitializing] = useState(true);
 
   const handleSubmitEvent = () => {
     navigation.navigate('Music player', {name: 'Music player'});

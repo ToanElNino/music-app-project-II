@@ -1,9 +1,7 @@
 import React from 'react';
-import {View, StyleSheet, StatusBar} from 'react-native';
-import PlayIcon from './assets/icons/User.png';
+import {StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-// import MusicPlayer from './components/auth/MusicPlayer';
 import LoginLayout from './components/auth/LogIn';
 import MusicPlayer from './components/Music/MusicPlayer';
 
@@ -31,7 +29,7 @@ const App = () => {
           name="Music player"
           component={MusicPlayer}
           options={{
-            title: 'Sign up', //Set Header Title
+            title: 'Music Player', //Set Header Title
             headerStyle: {
               backgroundColor: '#3A5BB3', //Set Header color
             },
