@@ -17,9 +17,9 @@ const LoginLayout = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
-  const [initializing, setInitializing] = useState(true);
 
   const handleSubmitEvent = (email, password) => {
+    console.log('hih');
     auth()
       .signInWithEmailAndPassword(
         'jane.doe@example.com',
@@ -27,6 +27,7 @@ const LoginLayout = ({navigation}) => {
       )
       .then(() => {
         console.log('Login success');
+        Alert.alert('Sign in success');
       })
       .catch(error => {
         // if (error.code === 'auth/email-already-in-use') {
@@ -46,7 +47,7 @@ const LoginLayout = ({navigation}) => {
     <View style={styles.container}>
       <Image
         style={styles.image}
-        source={require('../../assets/Login/Logo.png')}
+        source={require('../../../assets/Login/Logo.png')}
       />
       <View style={styles.inputView}>
         <TextInput
@@ -65,23 +66,6 @@ const LoginLayout = ({navigation}) => {
           onChangeText={password => setPassword(password)}
         />
       </View>
-      <View
-        style={{
-          margin: 10,
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignContent: 'center',
-        }}>
-        <Checkbox
-          status={remember ? 'checked' : 'unchecked'}
-          color="black"
-          onPress={() => {
-            setRemember(!remember);
-          }}
-        />
-        <Text style={{marginTop: 8}}>Remember me</Text>
-      </View>
-
       <TouchableOpacity
         style={styles.loginButton}
         onPress={() => handleSubmitEvent()}>

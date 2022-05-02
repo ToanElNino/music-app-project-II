@@ -1,7 +1,13 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import auth from '@react-native-firebase/auth';
-import LoginLayout from './components/auth/LogIn';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React, {useEffect, useState} from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import LogOut from './components/auth/LogOut';
+import SignUpLayout from './components/auth/SignUp';
+import LoginLayout from './components/auth/logIn/LogIn';
+
+const Stack = createNativeStackNavigator();
 
 const App = () => {
   // Set an initializing state whilst Firebase connects
@@ -16,29 +22,60 @@ const App = () => {
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
+    return subscriber;
   }, []);
-
-  if (initializing) return null;
-
-  if (!user) {
-    return <LoginLayout />;
-  }
-  const handleLogout = (email, password) => {
-    auth()
-      .signOut()
-      .then(() => console.log('User signed out!'));
-  };
-
   return (
-    <View style={styles.container}>
-      <Text>Welcome {user.email}</Text>
-      <TouchableOpacity
-        style={styles.loginButton}
-        onPress={() => handleLogout()}>
-        <Text style={{color: 'white'}}>Log Out</Text>
-      </TouchableOpacity>
-    </View>
+    <NavigationContainer>
+      {user ? (
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Log out"
+            component={LogOut}
+            options={{
+              title: 'Log out',
+              headerStyle: {
+                backgroundColor: '#3A5BB3',
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+            }}
+          />
+        </Stack.Navigator>
+      ) : (
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Sign in"
+            component={LoginLayout}
+            options={{
+              title: 'Sign in',
+              headerStyle: {
+                backgroundColor: '#3A5BB3',
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+            }}
+          />
+          <Stack.Screen
+            name="Sign up"
+            component={SignUpLayout}
+            options={{
+              title: 'Sign up', //Set Header Title
+              headerStyle: {
+                backgroundColor: '#3A5BB3', //Set Header color
+              },
+              headerTintColor: '#fff', //Set Header text color
+              headerTitleStyle: {
+                fontWeight: 'bold', //Set Header text style
+              },
+            }}
+          />
+        </Stack.Navigator>
+      )}
+    </NavigationContainer>
   );
 };
 
