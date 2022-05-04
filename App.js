@@ -2,10 +2,10 @@ import auth from '@react-native-firebase/auth';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import LogOut from './components/auth/LogOut';
 import SignUpLayout from './components/auth/SignUp';
-import LoginLayout from './components/auth/logIn/LogIn';
+import LoginLayout from './components/auth/LogIn';
+import MusicPlayer from './components/Music/MusicPlayer';
 
 const Stack = createNativeStackNavigator();
 
@@ -60,6 +60,20 @@ const App = () => {
             }}
           />
           <Stack.Screen
+            name="Music player"
+            component={MusicPlayer}
+            options={{
+              title: 'Music player',
+              headerStyle: {
+                backgroundColor: '#3A5BB3',
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+            }}
+          />
+          <Stack.Screen
             name="Sign up"
             component={SignUpLayout}
             options={{
@@ -78,20 +92,5 @@ const App = () => {
     </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  loginButton: {
-    width: 220,
-    backgroundColor: '#3A5BB3',
-    padding: 10,
-    alignItems: 'center',
-    marginTop: 25,
-    borderRadius: 10,
-  },
-});
 
 export default App;

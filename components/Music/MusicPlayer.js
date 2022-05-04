@@ -1,9 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Button} from 'react-native';
+import {View, Text, StyleSheet, Button, Pressable, Image} from 'react-native';
 import TrackPlayer from 'react-native-track-player';
 import songs from '../../model/data';
-// import {useTrackPlayerProgress} from 'react-native-track-player/lib/hooks';
+import {useTrackPlayerProgress} from 'react-native-track-player/lib/hooks';
 import Slider from '@react-native-community/slider';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Entypo from 'react-native-vector-icons/Entypo';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {Animated} from 'react-native';
 
 const trackPlayerInit = async () => {
   await TrackPlayer.setupPlayer();
@@ -11,6 +15,15 @@ const trackPlayerInit = async () => {
   return true;
 };
 
+// TrackPlayer.updateOptions({
+//   stopWithApp: false,
+//   capabilities: [
+//     TrackPlayer.CAPABILITY_PLAY,
+//     TrackPlayer.CAPABILITY_PAUSE,
+//     TrackPlayer.CAPABILITY_JUMP_FORWARD,
+//     TrackPlayer.CAPABILITY_JUMP_BACKWARD,
+//   ],
+// });
 const MusicPlayer = () => {
   const [isTrackPlayerInit, setIsTrackPlayerInit] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -64,27 +77,16 @@ const MusicPlayer = () => {
   // };
   return (
     <View style={styles.container}>
-      <Text>Music Player Component</Text>
-      {/* <TrackPlayer></TrackPlayer> */}
-      <View style={styles.optionButtons}>
-        <Button
-          style={styles.optionButton}
-          title="Back"
-          onPress={() => {
-            console.log('Back');
+      <View style={styles.songDetails}>
+        <Text style={styles.songName}>Happier</Text>
+        <Text style={styles.songArtist}>Ed Sheeran</Text>
+      </View>
+      <View style={styles.songImage}>
+        <Image
+          source={{
+            uri: 'https://media.hitparade.ch/cover/big/ed_sheeran-happier_s.jpg',
           }}
-        />
-        <Button
-          style={styles.optionButton}
-          title={isPlaying ? 'Pause' : 'Play'}
-          onPress={onButtonPressed}
-        />
-        <Button
-          style={styles.optionButton}
-          title="Next"
-          onPress={() => {
-            console.log('Next');
-          }}
+          style={{width: 250, height: 250, borderRadius: 250 / 2}}
         />
       </View>
       <View style={styles.slider}>
@@ -99,6 +101,47 @@ const MusicPlayer = () => {
           // onSlidingComplete={slidingCompleted}
         />
       </View>
+      <View style={styles.optionButtons}>
+        <View style={styles.optionButton}>
+          <Entypo name="shuffle" size={30} color="black" />
+        </View>
+        <View style={styles.optionButton}>
+          <AntDesign name="stepbackward" size={30} color="black" />
+        </View>
+        <View style={styles.optionButton}>
+          <Pressable
+            onPress={onButtonPressed}
+            style={({pressed}) => [
+              {
+                backgroundColor: pressed ? 'red' : 'white',
+              },
+              styles.wrapperCustom,
+            ]}>
+            {isPlaying ? (
+              <AntDesign name="pausecircle" size={30} color="black" />
+            ) : (
+              <AntDesign name="play" size={30} color="black" />
+            )}
+          </Pressable>
+        </View>
+        <View style={styles.optionButton}>
+          <AntDesign name="stepforward" size={30} color="black" />
+        </View>
+        <View style={styles.optionButton}>
+          <Entypo name="loop" size={30} color="black" />
+        </View>
+      </View>
+      <View style={styles.reactButtons}>
+        <View style={styles.reactButton}>
+          <AntDesign name="hearto" size={25} color="black" />
+        </View>
+        <View style={styles.reactButton}>
+          <FontAwesome name="comment-o" size={25} color="black" />
+        </View>
+        <View style={styles.reactButton}>
+          <Entypo name="add-to-list" size={25} color="black" />
+        </View>
+      </View>
     </View>
   );
 };
@@ -108,21 +151,39 @@ export default MusicPlayer;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: 'center',
     flexDirection: 'column',
     alignItems: 'center',
     alignContent: 'center',
   },
+  songDetails: {
+    alignItems: 'center',
+    marginTop: 30,
+  },
+  songName: {
+    fontSize: 25,
+    fontWeight: 'bold',
+  },
+  songArtist: {
+    fontSize: 16,
+  },
+  songImage: {marginVertical: 40},
   optionButtons: {
     flexDirection: 'row',
     marginVertical: 20,
   },
   optionButton: {
-    margin: 20,
+    margin: 15,
   },
   slider: {
     padding: 10,
     width: '85%',
     height: 40,
+  },
+  reactButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  reactButton: {
+    marginHorizontal: 50,
   },
 });
