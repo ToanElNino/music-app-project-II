@@ -2,10 +2,12 @@ import auth from '@react-native-firebase/auth';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import LogOut from './components/auth/LogOut';
-import SignUpLayout from './components/auth/SignUp';
-import LoginLayout from './components/auth/LogIn';
-import MusicPlayer from './components/Music/MusicPlayer';
+import LogOut from './src/components/auth/LogOut';
+import SignUpLayout from './src/components/auth/SignUp';
+import LoginLayout from './src/components/auth/LogIn';
+import MusicPlayer from './src/components/Music/MusicPlayer';
+import MainHomeScreen from './src/screens/mainHomeScreen/MainHomeScreen';
+import Tabs from './src/navigation/tabs';
 
 const Stack = createNativeStackNavigator();
 
@@ -61,7 +63,7 @@ const App = () => {
           />
           <Stack.Screen
             name="Music player"
-            component={MusicPlayer}
+            component={Tabs}
             options={{
               title: 'Music player',
               headerStyle: {

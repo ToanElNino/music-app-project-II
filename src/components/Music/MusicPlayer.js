@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Button, Pressable, Image} from 'react-native';
 import TrackPlayer from 'react-native-track-player';
-import songs from '../../model/data';
+import songs from '../../../model/data';
 import {useTrackPlayerProgress} from 'react-native-track-player/lib/hooks';
 import Slider from '@react-native-community/slider';
 import AntDesign from 'react-native-vector-icons/AntDesign';
