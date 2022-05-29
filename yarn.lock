@@ -1390,10 +1390,10 @@
   resolved "https://registry.npmjs.org/@react-native-community/eslint-plugin/-/eslint-plugin-1.2.0.tgz"
   integrity sha512-o6aam+0Ug1xGK3ABYmBm0B1YuEKfM/5kaoZO0eHbZwSpw9UzDX4G5y4Nx/K20FHqUmJHkZmLvOUFYwN4N+HqKA==
 
-"@react-native-community/slider@^4.2.1":
-  version "4.2.1"
-  resolved "https://registry.npmjs.org/@react-native-community/slider/-/slider-4.2.1.tgz"
-  integrity sha512-6HUS5HbB9bvEN4GiwBlxECgPWQIugHE+kfnxqX2jHUl1SE57MRpw00m1qVs4hXtEPQndBl6mAQiGbKCOtLPVbg==
+"@react-native-community/slider@^4.2.2":
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/@react-native-community/slider/-/slider-4.2.2.tgz#06a0de89c26c6bd03d95798b777db1872b60c066"
+  integrity sha512-C1ldx1ypQo+uDWx78TUBG0evLVopKYHK2mQencl+vxi4ebMTL+ipJv5MF5mEvmZWLUOAMm5AsoQNHChYUdyWrQ==
 
 "@react-native-firebase/app@^14.8.0":
   version "14.8.0"
@@ -3361,11 +3361,6 @@ event-target-shim@^5.0.0, event-target-shim@^5.0.1:
   version "5.0.1"
   resolved "https://registry.npmjs.org/event-target-shim/-/event-target-shim-5.0.1.tgz"
   integrity sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==
-
-events@^3.0.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/events/-/events-3.3.0.tgz#31a95ad0a924e2d2c419a813aeb2c4e878ea7400"
-  integrity sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==
 
 exec-sh@^0.3.2:
   version "0.3.6"
@@ -6367,13 +6362,6 @@ react-native-vector-icons@^9.1.0:
   dependencies:
     prop-types "^15.7.2"
     yargs "^16.1.1"
-
-react-native-zeroconf@^0.13.6:
-  version "0.13.6"
-  resolved "https://registry.yarnpkg.com/react-native-zeroconf/-/react-native-zeroconf-0.13.6.tgz#6c73f8c68ad86b30c72c345df00b776bfc3cfbb6"
-  integrity sha512-vkx3YGYNZqZ3bXprSFiX0bU6zGYrjHGu2hVUBUDeApHxYLa7Rz3eY517TDgCeE5Igav8jALHTU6RPziNZTfQQg==
-  dependencies:
-    events "^3.0.0"
 
 react-native@0.68.1:
   version "0.68.1"

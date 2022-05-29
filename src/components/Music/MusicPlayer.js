@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Button, Pressable, Image, Dimensions} from 'react-native';
+import {View, Text, StyleSheet, Button, Pressable, Image, Dimensions, TouchableOpacity} from 'react-native';
 import TrackPlayer from 'react-native-track-player';
 import songs from '../../../model/data';
-import {useTrackPlayerProgress} from 'react-native-track-player/lib/hooks';
+import {useTrackPlayerProgress} from 'react-native-track-player';
 import Slider from '@react-native-community/slider';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {Animated} from 'react-native';
 // import LinearGradient from 'react-native-linear-gradient';
+// const {position, duration} = useTrackPlayerProgress(250);
 
 const {width, height} = Dimensions.get('screen');
 // TrackPlayer.updateOptions({
@@ -24,15 +25,23 @@ const MusicPlayer = (props) => {
     //option button
   const [isShuffle, setIsShuffle]= useState(false);
   const [isLoop, setIsLoop]= useState(false);
+  const [sliding, setSliding] = useState('Inactive')
 
-
+  const [clockState, setClockState]= useState();
+  useEffect(()=>{
+    setInterval(()=>{
+      const date = new Date();
+      // setClockState(date.toLocaleTimeString())
+      // setSliderValue(sliderValue + 0.1);
+    },1000)
+  },[])
   console.log(props.route.params.song);
   const song=props.route.params.song;
   //console.log(props.route.params.song_url);
   useEffect(()=>{
     const trackPlayerInit = async () => {
       await TrackPlayer.setupPlayer();
-      await TrackPlayer.add(props.route.params.song);
+      await TrackPlayer.add(songs);
       return true;
     };
     const startPlayer = async () => {
@@ -76,6 +85,11 @@ const MusicPlayer = (props) => {
   //     setSliderValue(position / duration);
   //   }
   // }, [position, duration]);
+  // useEffect(()=>{
+  //   setInterval(()=>{
+  //     setSliderValue(0.8)
+  //   },1000)
+  // },[])
 
   const onButtonPressed = () => {
     if (!isPlaying) {
@@ -86,6 +100,12 @@ const MusicPlayer = (props) => {
       setIsPlaying(false);
     }
   };
+  const handleNext = async () =>{
+    await TrackPlayer.skipToNext();
+  }
+  const handleBack = async () =>{
+    await TrackPlayer.skipToPrevious();
+  }
   //this function is called when the user starts to slide the seekbar
   const slidingStarted = () => {
     setIsSeeking(true);
@@ -111,14 +131,17 @@ const MusicPlayer = (props) => {
         />
       </View>
       <View style={styles.slider}>
+         <Text>{clockState}</Text>
+         <Text>{sliderValue *100}</Text>
         <Slider
           // style={{width: 400, height: 40}}
           minimumValue={0}
           maximumValue={1}
           value={sliderValue}
-          minimumTrackTintColor="#111000"
+          minimumTrackTintColor="green"
           maximumTrackTintColor="#000000"
           onSlidingStart={slidingStarted}
+          // onValueChange={value1 => setSliderValue(parseInt(value1*100)+ '%')}
           // onSlidingComplete={slidingCompleted}
         />
       </View>
@@ -140,7 +163,10 @@ const MusicPlayer = (props) => {
         </Pressable>
         </View>
         <View style={styles.optionButton}>
+        <TouchableOpacity onPress={()=> handleBack()}>
           <AntDesign name="stepbackward" size={30} color="black" />
+
+        </TouchableOpacity>
         </View>
         <View style={styles.optionButton}>
           <Pressable
@@ -154,7 +180,9 @@ const MusicPlayer = (props) => {
           </Pressable>
         </View>
         <View style={styles.optionButton}>
+        <TouchableOpacity onPress={()=> handleNext()}>
           <AntDesign name="stepforward" size={30} color="black" />
+        </TouchableOpacity>
         </View>
         <View style={styles.optionButton}>
         <Pressable onPress={()=>{

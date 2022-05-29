@@ -5,8 +5,6 @@ import { TextInput } from 'react-native-paper';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import DocumentPicker,{ types } from 'react-native-document-picker';
-import Zeroconf from 'react-native-zeroconf'
-const zeroconf = new Zeroconf()
 const {width, height} = Dimensions.get('screen');
 
 const UploadScreen =()=>{
@@ -17,6 +15,7 @@ const UploadScreen =()=>{
   const [url, setUrl] = useState("");
   const [title, setTitle] = useState("");
   const [name, setName] = useState("");
+  //check upload
 
   //file's name
   const [audioName, setAuidoName]= useState('No choosen file');
@@ -48,7 +47,6 @@ const UploadScreen =()=>{
     })
       .then(image => {
         console.log('selected photo: ' + image.path);
-        // setSelectedImage(image);
         setImgUrl(image.path);
         setPhoto({
           uri:image.path,
@@ -103,13 +101,12 @@ const UploadScreen =()=>{
   }
     return(
       <View>
-        <View style={styles.centeredView}>
+        <View style={styles.modalContainer}>
           <Modal
             animationType="slide"
             transparent={true}
             visible={modalVisible}
             onRequestClose={() => {
-              Alert.alert("Modal has been closed.");
               setModalVisible(!modalVisible);
             }}
           >
@@ -222,7 +219,7 @@ const UploadScreen =()=>{
                       handleUpData(photo);
                       }}
                   >
-                    <Text style={styles.textStyle}>Upload song</Text>
+                    <Text style={styles.textStyle}>Upload</Text>
                   </Pressable>
 
                 </View>
@@ -233,7 +230,7 @@ const UploadScreen =()=>{
               style={[styles.button, styles.buttonOpen]}
               onPress={() => setModalVisible(true)}
             >
-              <Text style={styles.textStyle}>Show Modal</Text>
+              <Text style={styles.textStyle}>+ Upload song</Text>
             </Pressable>
         </View>
       </View>
@@ -244,6 +241,10 @@ const styles= StyleSheet.create({
     container:{
         flex:1,
         alignItems:'center',
+    },
+    modalContainer:{
+      alignItems: 'center',
+      marginTop: 100,
     },
     upLoadBtn:{
         width: 250,
@@ -257,10 +258,10 @@ const styles= StyleSheet.create({
       // flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      marginTop: 22
+      marginTop: 10
     },
     modalView: {
-      height: height*87/100,
+      height: height*89/100,
       width: width*95/100,
       marginBottom: 30,
       backgroundColor: "white",
@@ -283,14 +284,26 @@ const styles= StyleSheet.create({
     },
     buttonOpen: {
       backgroundColor: "#F194FF",
+      width: 250,
+      backgroundColor: '#3A5BB3',
+      padding: 10,
+      alignItems: 'center',
+      marginTop: 25,
+      borderRadius: 10,
     },
     buttonClose: {
       backgroundColor: "#2196F3",
+      width: 150,
+      backgroundColor: '#3A5BB3',
+      padding: 10,
+      alignItems: 'center',
+      borderRadius: 10,
     },
     textStyle: {
       color: "white",
       fontWeight: "bold",
-      textAlign: "center"
+      textAlign: "center",
+      fontSize: 16
     },
     modalText: {
       marginBottom: 15,
