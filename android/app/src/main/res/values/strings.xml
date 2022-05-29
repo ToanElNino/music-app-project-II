@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">musicplayer</string>
-    <string name="facebook_app_id">563164371789318</string><string name="facebook_client_token">92116bfc479e89087570222a52356afa</string>
+    <string name="facebook_app_id">563164371789318</string>
+    <string name="fb_login_protocol_scheme">fb563164371789318</string>
+    <string name="facebook_client_token">92116bfc479e89087570222a52356afa</string>
 </resources>

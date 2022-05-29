@@ -5,8 +5,6 @@ import {NavigationContainer} from '@react-navigation/native';
 import LogOut from './src/components/auth/LogOut';
 import SignUpLayout from './src/components/auth/SignUp';
 import LoginLayout from './src/components/auth/LogIn';
-import MusicPlayer from './src/components/Music/MusicPlayer';
-import MainHomeScreen from './src/screens/mainHomeScreen/MainHomeScreen';
 import Tabs from './src/navigation/tabs';
 
 const Stack = createNativeStackNavigator();
@@ -44,6 +42,20 @@ const App = () => {
               },
             }}
           />
+          <Stack.Screen
+            name="Music player"
+            component={Tabs}
+            options={{
+              title: 'Music player',
+              headerStyle: {
+                backgroundColor: '#3A5BB3',
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+            }}
+          />
         </Stack.Navigator>
       ) : (
         <Stack.Navigator>
@@ -61,7 +73,7 @@ const App = () => {
               },
             }}
           />
-          <Stack.Screen
+           <Stack.Screen
             name="Music player"
             component={Tabs}
             options={{

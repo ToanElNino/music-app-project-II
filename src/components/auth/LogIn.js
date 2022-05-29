@@ -22,10 +22,11 @@ const LoginLayout = ({navigation}) => {
 
   //firebase handle
   const handleSubmitEvent = (email, password) => {
+    console.log('click login');
     auth()
       .signInWithEmailAndPassword(
-        'jane.doe@example.com',
-        'SuperSecretPassword!',
+        'toanquocnguyen192@gmail.com',
+        'Ryannguyen1902',
       )
       .then(() => {
         console.log('Login success');
@@ -79,7 +80,11 @@ const LoginLayout = ({navigation}) => {
           style={styles.textInput}
           placeholder="Phone or email"
           placeholderTextColor="#003f5c"
-          onChangeText={email => setEmail(email)}
+          value={email}
+          onChangeText={email => {
+            setEmail(email)
+            console.log(email);
+            }}
         />
       </View>
       <View style={styles.inputView}>
@@ -90,13 +95,16 @@ const LoginLayout = ({navigation}) => {
           style={styles.textInput}
           placeholder="Password"
           placeholderTextColor="#003f5c"
+          value={password}
           secureTextEntry={true}
-          onChangeText={password => setPassword(password)}
+          onChangeText={password => {setPassword(password)
+          console.log(password)
+          }}
         />
       </View>
       <TouchableOpacity
         style={styles.loginButton}
-        onPress={() => handleSubmitEvent()}>
+        onPress={() => handleSubmitEvent(email,password)}>
         <Text style={{color: 'white'}}>LOGIN</Text>
       </TouchableOpacity>
       <TouchableOpacity>

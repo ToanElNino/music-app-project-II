@@ -1,6 +1,6 @@
 /* eslint-disable react/self-closing-comp */
 import React from 'react';
-import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
+import {View, Text, StyleSheet, Image, FlatList, Pressable,} from 'react-native';
 //import {Data} from '../../dataMock/NearList';
 
 const Data = [
@@ -37,7 +37,7 @@ const Data = [
       restaurantPhoneNumber: '012 3456 789',
     },
   ];
-export const NewSongsList = () => {
+export const NewSongsList = ({navigation}) => {
   const Item = ({title}) => (
     <View style={styles.item}>
       <View style={styles.restaurantImage}>
@@ -48,12 +48,18 @@ export const NewSongsList = () => {
       </View>
     </View>
   );
-  const renderItem = ({item}) => <Item title={item} />;
+  const renderItem = ({item}) => (
+    <Pressable onPress={()=>{
+      console.log('click')
+    }}>
+      <Item title={item} />
+    </Pressable>
+  );
   return (
     <View style={styles.container}>
       <View style={styles.textHeader}>
         <Text style={{fontSize: 16, color: '#191970', fontWeight:'bold'}}>New Songs Released</Text>
-        <Text style={{fontSize: 14, color: '#00bfff'}}>Xem tất cả</Text>
+        {/* <Text style={{fontSize: 14, color: '#00bfff'}}>Xem tất cả</Text> */}
       </View>
       <View style={styles.itemListContainer}>
         <FlatList

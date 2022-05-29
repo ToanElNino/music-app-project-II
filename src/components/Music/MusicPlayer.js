@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Button, Pressable, Image} from 'react-native';
+import {View, Text, StyleSheet, Button, Pressable, Image, Dimensions} from 'react-native';
 import TrackPlayer from 'react-native-track-player';
 import songs from '../../../model/data';
 import {useTrackPlayerProgress} from 'react-native-track-player/lib/hooks';
@@ -8,13 +8,9 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {Animated} from 'react-native';
+// import LinearGradient from 'react-native-linear-gradient';
 
-const trackPlayerInit = async () => {
-  await TrackPlayer.setupPlayer();
-  await TrackPlayer.add(songs);
-  return true;
-};
-
+const {width, height} = Dimensions.get('screen');
 // TrackPlayer.updateOptions({
 //   stopWithApp: false,
 //   capabilities: [
@@ -24,9 +20,34 @@ const trackPlayerInit = async () => {
 //     TrackPlayer.CAPABILITY_JUMP_BACKWARD,
 //   ],
 // });
-const MusicPlayer = () => {
+const MusicPlayer = (props) => {
+    //option button
+  const [isShuffle, setIsShuffle]= useState(false);
+  const [isLoop, setIsLoop]= useState(false);
+
+
+  console.log(props.route.params.song);
+  const song=props.route.params.song;
+  //console.log(props.route.params.song_url);
+  useEffect(()=>{
+    const trackPlayerInit = async () => {
+      await TrackPlayer.setupPlayer();
+      await TrackPlayer.add(props.route.params.song);
+      return true;
+    };
+    const startPlayer = async () => {
+      let isInit = await trackPlayerInit();
+      setIsTrackPlayerInit(isInit);
+    };
+    startPlayer();
+    setTimeout(()=>{
+      TrackPlayer.play();
+      setIsPlaying(true);
+    },1000);
+
+  },[song.id])
   const [isTrackPlayerInit, setIsTrackPlayerInit] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
 
   const [songIndex, setSongIndex] = useState(0);
 
@@ -41,13 +62,13 @@ const MusicPlayer = () => {
   // const {position, duration} = useTrackPlayerProgress(250);
 
   //initialize the TrackPlayer when the App component is mounted
-  useEffect(() => {
-    const startPlayer = async () => {
-      let isInit = await trackPlayerInit();
-      setIsTrackPlayerInit(isInit);
-    };
-    startPlayer();
-  }, []);
+  // useEffect(() => {
+  //   const startPlayer = async () => {
+  //     let isInit = await trackPlayerInit();
+  //     setIsTrackPlayerInit(isInit);
+  //   };
+  //   startPlayer();
+  // }, []);
 
   //this hook updates the value of the slider whenever the current position of the song changes
   // useEffect(() => {
@@ -78,15 +99,15 @@ const MusicPlayer = () => {
   return (
     <View style={styles.container}>
       <View style={styles.songDetails}>
-        <Text style={styles.songName}>Happier</Text>
-        <Text style={styles.songArtist}>Ed Sheeran</Text>
+        <Text style={styles.songName}>{song.title}</Text>
+        <Text style={styles.songArtist}>{song.artist}</Text>
       </View>
       <View style={styles.songImage}>
         <Image
           source={{
-            uri: 'https://media.hitparade.ch/cover/big/ed_sheeran-happier_s.jpg',
+            uri: song.artwork
           }}
-          style={{width: 250, height: 250, borderRadius: 250 / 2}}
+          style={{width: 220, height: 220, borderRadius: 220 / 2}}
         />
       </View>
       <View style={styles.slider}>
@@ -101,9 +122,22 @@ const MusicPlayer = () => {
           // onSlidingComplete={slidingCompleted}
         />
       </View>
+      <View style={{flexDirection:'row', justifyContent:'space-around'}}>
+        <View style={{marginRight: 200}}>
+          <Text>0:00</Text>
+        </View>
+        <View>
+          <Text>{(song.duration- song.duration%60)/60}:{song.duration%60 > 10? song.duration%60 : '0' + song.duration%60}</Text>
+        </View>
+      </View>
       <View style={styles.optionButtons}>
         <View style={styles.optionButton}>
-          <Entypo name="shuffle" size={30} color="black" />
+        <Pressable onPress={()=>{
+          setIsShuffle(!isShuffle)
+        }}>
+          <Entypo name="shuffle" size={30} color={isShuffle? 'black': 'grey'} />
+
+        </Pressable>
         </View>
         <View style={styles.optionButton}>
           <AntDesign name="stepbackward" size={30} color="black" />
@@ -111,12 +145,7 @@ const MusicPlayer = () => {
         <View style={styles.optionButton}>
           <Pressable
             onPress={onButtonPressed}
-            style={({pressed}) => [
-              {
-                backgroundColor: pressed ? 'red' : 'white',
-              },
-              styles.wrapperCustom,
-            ]}>
+            >
             {isPlaying ? (
               <AntDesign name="pausecircle" size={30} color="black" />
             ) : (
@@ -128,7 +157,11 @@ const MusicPlayer = () => {
           <AntDesign name="stepforward" size={30} color="black" />
         </View>
         <View style={styles.optionButton}>
-          <Entypo name="loop" size={30} color="black" />
+        <Pressable onPress={()=>{
+          setIsLoop(!isLoop)
+        }}>
+          <Entypo name="loop" size={30} color={isLoop? 'black': 'grey'} />
+        </Pressable>
         </View>
       </View>
       <View style={styles.reactButtons}>
@@ -154,6 +187,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     alignContent: 'center',
+    marginBottom: 100,
   },
   songDetails: {
     alignItems: 'center',
@@ -169,7 +203,7 @@ const styles = StyleSheet.create({
   songImage: {marginVertical: 40},
   optionButtons: {
     flexDirection: 'row',
-    marginVertical: 20,
+    marginVertical: 10,
   },
   optionButton: {
     margin: 15,
