@@ -6,6 +6,8 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import DocumentPicker,{ types } from 'react-native-document-picker';
 const {width, height} = Dimensions.get('screen');
+import { db } from '../../../../firebase';
+import { set, ref, getDatabase } from 'firebase/database';
 
 const UploadScreen =()=>{
   const [modalVisible, setModalVisible] = useState(false);
@@ -99,6 +101,20 @@ const UploadScreen =()=>{
     }
     console.log('audio: ',audio);
   }
+
+  ///Test realtime database
+const handleTestButton=()=>{
+  console.log('click');
+  set(ref(db, 'users/' + 2),{
+    username: 'Quoc Toan',
+    email: 'toanquocnguyen'
+  }).then(()=>{
+    console.log('oke')
+  }).catch((error)=>{
+    console.log('loi: ',error);
+  })
+}
+
     return(
       <View>
         <View style={styles.modalContainer}>
@@ -180,7 +196,7 @@ const UploadScreen =()=>{
                   </View>
                   <View style={{paddingHorizontal: 10, marginBottom: 7}}>
                     <TouchableOpacity style={styles.chooseImageBtn} onPress={()=> chooseFile()}>
-                        <Text style={{color:'white',fontWeight:'700', fontSize: 14}}>Take a picture</Text>
+                        <Text style={{color:'white',fontWeight:'700', fontSize: 14}}>Choose audio</Text>
                       </TouchableOpacity>
                   </View>
                   
@@ -231,6 +247,12 @@ const UploadScreen =()=>{
               onPress={() => setModalVisible(true)}
             >
               <Text style={styles.textStyle}>+ Upload song</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.button, styles.buttonOpen]}
+              onPress={()=> handleTestButton()}
+            >
+              <Text style={styles.textStyle}>Test Realtime database</Text>
             </Pressable>
         </View>
       </View>

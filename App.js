@@ -6,7 +6,7 @@ import LogOut from './src/components/auth/LogOut';
 import SignUpLayout from './src/components/auth/SignUp';
 import LoginLayout from './src/components/auth/LogIn';
 import Tabs from './src/navigation/tabs';
-
+// import { db } from './firebase';
 const Stack = createNativeStackNavigator();
 
 const App = () => {

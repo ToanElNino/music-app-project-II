@@ -17,6 +17,7 @@
     "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.1",
+    "firebase": "9.6.11",
     "node-dns-sd": "^0.4.2",
     "react": "17.0.2",
     "react-audio-player": "^0.17.0",
