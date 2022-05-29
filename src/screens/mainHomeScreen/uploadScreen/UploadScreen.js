@@ -13,17 +13,26 @@ const UploadScreen =()=>{
   const [modalVisible, setModalVisible] = useState(false);
   const [imgUrl, setImgUrl] = useState('https://png.pngtree.com/png-vector/20190120/ourlarge/pngtree-gallery-vector-icon-png-image_470660.jpg');
   const [photo, setPhoto]=useState({});
+  const [audio, setAudio]= useState({});
   const [url, setUrl] = useState("");
   const [title, setTitle] = useState("");
   const [name, setName] = useState("");
+
+  //file's name
+  const [audioName, setAuidoName]= useState('No choosen file');
+//text input value
+ const [songName, setSongName]= useState("");
+ const [artistname, setArtistName] = useState("");
+
+
 ///picker category
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(`Love song`);
   const [items, setItems] = useState([
-    {label: 'Love song', value: 'love'},
-    {label: 'Country', value: 'country'},
-    {label: 'R&B', value: 'rnb'},
-    {label: 'Rock', value: 'rock'},
+    {label: 'Category: Love song', value: 'love'},
+    {label: 'Category: Country', value: 'country'},
+    {label: 'Category: R&B', value: 'rnb'},
+    {label: 'Category: Rock', value: 'rock'},
   ]);
   //picker security
   const [open1, setOpen1] = useState(false);
@@ -53,12 +62,13 @@ const UploadScreen =()=>{
       });
   };
 
-  const handleUpData = (photo)=>{
+
+  const handleUpData = (file)=>{
     const data = new FormData();
-    data.append('file', photo)
+    data.append('file', file)
     data.append('upload_preset', '_UploadImage')
     data.append('cloud_name','project2cloud')
-    fetch('https://api.cloudinary.com/v1_1/project2cloud/image/upload',{
+    fetch('https://api.cloudinary.com/v1_1/project2cloud/upload',{
       method: 'POST',
       body: data,
       headers: {
@@ -75,25 +85,21 @@ const UploadScreen =()=>{
   //handle file .mp3
   const chooseFile =async()=>{
     console.log('choose')
-    // zeroconf = new Zeroconf()
-    zeroconf.scan('http','tcp','local.');
-    // this.zeroconf.scan('GPMDP')
-    zeroconf.on('start', () => console.log('start.'))
-    zeroconf.on('found', () => console.log('found')) 
-    zeroconf.on('resolved', (service) => {
-        console.log('found service, adding to list', service)
-    })
-
-
-
-    // try {
-    //   const response = await DocumentPicker.pickSingle({
-    //     type: [DocumentPicker.types.audio],
-    //   });
-    //   console.log(response);
-    // } catch (err) {
-    //   console.log(err);
-    // }
+    try {
+      const response = await DocumentPicker.pickSingle({
+        type: [DocumentPicker.types.audio],
+      });
+      console.log(response);
+      setAuidoName(response.name + '.mp3')
+      setAudio({
+        uri:response.uri,
+        type:response.type,
+        name: response.uri.substring(response.uri.lastIndexOf('/') + 1),
+      })
+    } catch (err) {
+      console.log(err);
+    }
+    console.log('audio: ',audio);
   }
     return(
       <View>
@@ -112,18 +118,18 @@ const UploadScreen =()=>{
                 <View style={{marginBottom: 20, borderBottomWidth: 1}}>
                   <Text style={{color:'blue', fontSize: 25, fontWeight: '600'}}>Up load your own song!</Text>
                 </View>
-                <View style={{alignSelf:'flex-start', height: 40,width: width*8/11, marginBottom:20}}>
-                  <Text style={{fontSize:16}}>*Your song's name</Text>
-                  <TextInput style={{height:40, borderWidth:1}}
-                      value={'hehe'}
+                <View style={{alignSelf:'flex-start', height: 40,width: width*75/100, marginBottom:20}}>
+                  <Text style={{fontSize:16, fontWeight: '600', color:'#2196F3'}}>*Your song's name</Text>
+                  <TextInput style={{height:45, borderWidth:1, backgroundColor:'#f5f5f5', borderRadius: 10}}
+                      value={songName}
                       placeholder={`Enter song's name`}
                       >
                   </TextInput>
                 </View>
-                <View style={{alignSelf:'flex-start',marginTop:10, height: 40,width: width*8/11, marginBottom:20}}>
-                  <Text style={{fontSize:16}}>*Artist's name</Text>
-                  <TextInput style={{height:40, borderWidth:1}}
-                      value={'hehe'}
+                <View style={{alignSelf:'flex-start',marginTop:10, height: 40,width: width*75/100, marginBottom:20}}>
+                  <Text style={{fontSize:16, fontWeight: '600', color: '#2196F3'}}>*Artist's name</Text>
+                  <TextInput style={{height:45, borderWidth:1, backgroundColor:'#f5f5f5', borderRadius: 10}}
+                      value={artistname}
                       placeholder={`Enter artist's name`}
                       >
                   </TextInput>
@@ -131,9 +137,12 @@ const UploadScreen =()=>{
                 <View
                   style={{
                     marginTop:15,
-                    width: width*8/11,
+                    width: width*75/100,
                   }}>
                   <DropDownPicker
+                  style={{
+                          backgroundColor: "#f5f5f5"
+                        }}
                     placeholder="Choose song's category"
                     showArrowIcon={true}
                     showTickIcon={true}
@@ -145,15 +154,15 @@ const UploadScreen =()=>{
                     setItems={setItems}
                   />
                 </View>
-                <View style={{flexDirection:'row', justifyContent:'space-around', marginTop: 10}}>
+                <View style={{flexDirection:'row', justifyContent:'space-around', marginTop: 10, alignItems:'center'}}>
                     <View style={{marginRight: 20}}>
                       <Image source={{uri:imgUrl }}
                                         style={{
                             aspectRatio: 1,
                             width: width / 3,
                             borderRadius: width / 100,
-                            borderColor: '#1e90ff',
-                            borderWidth: 0.5,
+                            borderColor: 'black',
+                            borderWidth: 1,
                             marginHorizontal: 0,
                           }}
                       />
@@ -162,11 +171,23 @@ const UploadScreen =()=>{
                       <TouchableOpacity style={styles.chooseImageBtn} onPress={()=>chooseImage()}>
                         <Text style={{color:'white',fontWeight:'700', fontSize: 14}}>Choose picture</Text>
                       </TouchableOpacity>
-                      <TouchableOpacity style={styles.chooseImageBtn} onPress={()=> chooseFile()}>
-                        <Text style={{color:'white',fontWeight:'700', fontSize: 14}}>Take a picture</Text>
-                      </TouchableOpacity>
                     </View>
                 </View>  
+                <View style={{flexDirection:'column', backgroundColor: '#f5f5f5', borderRadius: 5,
+                           width: width*75/100, justifyContent:'space-between', marginVertical: 10,
+                           borderWidth: 1,
+                           alignContent: 'center', alignItems: 'center'
+                           }}>
+                  <View style={{paddingVertical: 5, paddingHorizontal: 10, alignSelf: 'flex-start'}}>
+                    <Text style={{fontSize: 15, fontWeight: '500'}}>{audioName.length>27 ? audioName.substring(0,30) + '...': audioName}</Text>
+                  </View>
+                  <View style={{paddingHorizontal: 10, marginBottom: 7}}>
+                    <TouchableOpacity style={styles.chooseImageBtn} onPress={()=> chooseFile()}>
+                        <Text style={{color:'white',fontWeight:'700', fontSize: 14}}>Take a picture</Text>
+                      </TouchableOpacity>
+                  </View>
+                  
+                </View>
                 <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                   <View style={{marginTop: 15, marginRight: 20}}>
                     <Text style={{fontSize:16}}>*Sercuity mode: </Text>
@@ -177,6 +198,9 @@ const UploadScreen =()=>{
                     width: width/3,
                   }}>
                   <DropDownPicker
+                  style={{
+  backgroundColor: "#f5f5f5"
+}}
                     placeholder="Private"
                     showArrowIcon={true}
                     showTickIcon={true}
@@ -194,6 +218,7 @@ const UploadScreen =()=>{
                     style={[styles.button, styles.buttonClose]}
                     onPress={() => {
                       setModalVisible(!modalVisible)
+                      handleUpData(audio);
                       handleUpData(photo);
                       }}
                   >
@@ -235,9 +260,9 @@ const styles= StyleSheet.create({
       marginTop: 22
     },
     modalView: {
-      height: height*8/10,
+      height: height*87/100,
       width: width*95/100,
-      margin: 20,
+      marginBottom: 30,
       backgroundColor: "white",
       borderRadius: 20,
       padding: 35,
