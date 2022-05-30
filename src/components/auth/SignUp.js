@@ -11,13 +11,18 @@ import {
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
+  Image,
 } from 'react-native';
+import { CreateNewUser } from '../../firebaseUtil/users/CreateNewUser';
 
 export default function SignUpLayout({navigation}) {
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
+  const [userName, setUserName]= useState(null);
+  const [userLoginMethod, setUserLoginMethod]= useState('firebase');
 
-  const handleSubmitEvent = (emailAddress, password) => {
+
+  const handleSubmitEvent = (emailAddress, password, userName) => {
     console.log('sign up');
     auth()
       .createUserWithEmailAndPassword(emailAddress, password)
@@ -25,6 +30,7 @@ export default function SignUpLayout({navigation}) {
         console.log('User account created & signed in!');
         console.log(emailAddress);
         console.log(password);
+        CreateNewUser({emailAddress,password, userName});
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
@@ -40,9 +46,14 @@ export default function SignUpLayout({navigation}) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
+      <Image
+        style={styles.image}
+        source={require('../../assets/Login/Logo.png')}
+      />
+      <View style={styles.scrollView}>
         <View style={styles.inputView}>
           <TextInput
+            autoFocus={true}
             style={styles.textInput}
             placeholder="Email address"
             placeholderTextColor="#003f5c"
@@ -59,12 +70,20 @@ export default function SignUpLayout({navigation}) {
             onChangeText={passwordInput => setPassword(passwordInput)}
           />
         </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Your full name"
+            placeholderTextColor="#003f5c"
+            onChangeText={nameInput => setUserName(nameInput)}
+          />
+        </View>
         <View style={styles.inputView}>{/* <CheckBox /> */}</View>
-      </ScrollView>
+      </View>
 
       <TouchableOpacity
         style={styles.signUpButton}
-        onPress={() => handleSubmitEvent(emailAddress, password)}>
+        onPress={() => handleSubmitEvent(emailAddress, password, userName)}>
         <Text style={{color: 'white'}}>Sign up</Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -74,16 +93,19 @@ export default function SignUpLayout({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#EEA1B1',
+    // backgroundColor: '#EEA1B1',
     alignItems: 'center',
     justifyContent: 'center',
   },
   scrollView: {
     width: '85%',
     paddingHorizontal: 20,
+    paddingVertical: 20,
+    marginTop: 0
   },
   image: {
-    height: '50%',
+    marginTop: 30,
+    height: '40%',
     resizeMode: 'contain',
   },
   inputView: {
@@ -106,7 +128,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#3A5BB3',
     padding: 10,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 0,
     marginBottom: 50,
     borderRadius: 10,
   },
