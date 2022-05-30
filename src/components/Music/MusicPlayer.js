@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Button, Pressable, Image, Dimensions, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, Button, Pressable, Image, Dimensions, TouchableOpacity, Linking} from 'react-native';
 import TrackPlayer from 'react-native-track-player';
 import songs from '../../../model/data';
 import {useTrackPlayerProgress} from 'react-native-track-player';
@@ -22,6 +22,13 @@ const {width, height} = Dimensions.get('screen');
 //   ],
 // });
 const MusicPlayer = (props) => {
+  //share facebook
+  const [facebookShareURL, setFacebookShareURL] = useState(
+    props.route.params.song.url,
+  );
+  const [postContent, setPostContent] = useState(
+    'Hello Guys, This is a testing of facebook share example',
+  );
     //option button
   const [isShuffle, setIsShuffle]= useState(false);
   const [isLoop, setIsLoop]= useState(false);
@@ -116,6 +123,25 @@ const MusicPlayer = (props) => {
   //   setSliderValue(value);
   //   setIsSeeking(false);
   // };
+
+  const handleShareFacebook= ()=>{
+      let facebookParameters = [];
+      if (facebookShareURL)
+        facebookParameters.push('u=' + encodeURI(facebookShareURL));
+      // if (postContent) facebookParameters.push('quote=' + encodeURI(postContent));
+      const url =
+        'https://www.facebook.com/sharer/sharer.php?' +
+        facebookParameters.join('&');
+  
+      Linking.openURL(url)
+        .then(data => {
+          console.log('data: ',data);
+          console.log('oke');
+        })
+        .catch(() => {
+          console.log('fail');
+        });
+}
   return (
     <View style={styles.container}>
       <View style={styles.songDetails}>
@@ -131,8 +157,8 @@ const MusicPlayer = (props) => {
         />
       </View>
       <View style={styles.slider}>
-         <Text>{clockState}</Text>
-         <Text>{sliderValue *100}</Text>
+         {/* <Text>{clockState}</Text> */}
+         {/* <Text>{sliderValue *100}</Text> */}
         <Slider
           // style={{width: 400, height: 40}}
           minimumValue={0}
@@ -200,7 +226,10 @@ const MusicPlayer = (props) => {
           <FontAwesome name="comment-o" size={25} color="black" />
         </View>
         <View style={styles.reactButton}>
-          <Entypo name="add-to-list" size={25} color="black" />
+        <TouchableOpacity onPress={()=> handleShareFacebook()}>
+          <FontAwesome name="share" size={25} color="black" />
+
+        </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -219,7 +248,7 @@ const styles = StyleSheet.create({
   },
   songDetails: {
     alignItems: 'center',
-    marginTop: 30,
+    marginTop: 10,
   },
   songName: {
     fontSize: 25,

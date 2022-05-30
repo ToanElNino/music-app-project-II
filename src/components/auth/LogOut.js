@@ -18,6 +18,11 @@ const LogOut = ({navigation}) => {
         onPress={() => handleLogout()}>
         <Text style={{color: 'white'}}>Log Out</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.loginButton}
+        onPress={()=> navigation.navigate('Music player')}
+      >
+        <Text style={{color: 'white'}}>Open Main Screen</Text>
+      </TouchableOpacity>
     </View>
   );
 };

@@ -25,8 +25,8 @@ const LoginLayout = ({navigation}) => {
     console.log('click login');
     auth()
       .signInWithEmailAndPassword(
-        'toanquocnguyen192@gmail.com',
-        'Ryannguyen1902',
+        email,
+        password,
       )
       .then(() => {
         console.log('Login success');
