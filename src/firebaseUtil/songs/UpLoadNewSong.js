@@ -2,22 +2,19 @@ import { db } from "../../../firebase";
 import { set, ref, getDatabase } from 'firebase/database';
 import { async } from "@firebase/util";
 
+function guidGenerator() {
+  var S4 = function() {
+     return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+  };
+  return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+}
+
 export async function UpLoadNewSong(params){
     console.log('call create new song realtime database');
     // const {songName} = params;
     console.log(params.artistName);
-    // console.log(songName);
-    // const newSong = [{
-    //     songName: songName,
-    //     artistName: artistname,
-    //     category: category,
-    //     songArtworkUrl: photoPathRes,
-    //     songURL: audioPathRes,
-    //     duration: 300,
-    //     isPrivate: items1,
-    //   }]
-
-  set(ref(db, 'songs/' + 123),{
+    // console.log(guidGenerator());
+  set(ref(db, 'songs/' + guidGenerator()),{
     id: 1,
     song_name: params.songName,
     artist_name: params.artistName,

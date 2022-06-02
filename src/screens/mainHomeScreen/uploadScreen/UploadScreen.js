@@ -133,7 +133,8 @@ const UploadScreen =()=>{
       }
       console.log(photoPathRes);
       console.log(audioPathRes);
-      UpLoadNewSong(newSong);
+      await UpLoadNewSong(newSong);
+      Alert.alert('Upload song sucessfully!');
     }else{
       alert('Upload fail! Invalid image or audio. Please try again!');
     }
