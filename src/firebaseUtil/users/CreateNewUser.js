@@ -11,7 +11,6 @@ export async function CreateNewUser({emailAddress,password, userName}){
     password: password,
     avatarURL: null,
     user_login_method: 'firebase',
-    
   }).then(()=>{
     console.log('oke')
   }).catch((error)=>{

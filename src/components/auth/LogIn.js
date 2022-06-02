@@ -23,18 +23,24 @@ const LoginLayout = ({navigation}) => {
   //firebase handle
   const handleSubmitEvent = (email, password) => {
     console.log('click login');
-    auth()
-      .signInWithEmailAndPassword(
-        email,
-        password,
-      )
-      .then(() => {
-        console.log('Login success');
-        Alert.alert('Sign in success');
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    if(email&&password){
+      auth()
+        .signInWithEmailAndPassword(
+          email,
+          password,
+        )
+        .then(() => {
+          console.log('Login success');
+          Alert.alert('Sign in success');
+        })
+        .catch(error => {
+          console.error(error);
+          alert('Error: Wrong email or password')
+
+        });
+    }else{
+      alert('Error: Missing email or password')
+    }
   };
   //facebook handle
   async function onFacebookButtonPress() {

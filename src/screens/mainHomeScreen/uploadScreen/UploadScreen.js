@@ -1,22 +1,18 @@
 import React, {useState,useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Modal,Alert, Pressable, Dimensions, Image} from 'react-native';
-import database from '@react-native-firebase/database';
 import { TextInput } from 'react-native-paper';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import DocumentPicker,{ types } from 'react-native-document-picker';
 const {width, height} = Dimensions.get('screen');
-import { db } from '../../../../firebase';
-import { set, ref, getDatabase } from 'firebase/database';
+import { UpLoadNewSong } from '../../../firebaseUtil/songs/UpLoadNewSong';
+
 
 const UploadScreen =()=>{
   const [modalVisible, setModalVisible] = useState(false);
   const [imgUrl, setImgUrl] = useState('https://png.pngtree.com/png-vector/20190120/ourlarge/pngtree-gallery-vector-icon-png-image_470660.jpg');
   const [photo, setPhoto]=useState({});
   const [audio, setAudio]= useState({});
-  const [url, setUrl] = useState("");
-  const [title, setTitle] = useState("");
-  const [name, setName] = useState("");
   //check upload
 
   //file's name
@@ -24,11 +20,13 @@ const UploadScreen =()=>{
 //text input value
  const [songName, setSongName]= useState("");
  const [artistname, setArtistName] = useState("");
-
+// url respone
+ const [songURLRes, setSongUrlRes]= useState('');
+ const [audioURLRes, setAudioUrlRes]= useState('');
 
 ///picker category
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(`Love song`);
+  const [category, setCategory] = useState(`Love song`);
   const [items, setItems] = useState([
     {label: 'Category: Love song', value: 'love'},
     {label: 'Category: Country', value: 'country'},
@@ -39,8 +37,8 @@ const UploadScreen =()=>{
   const [open1, setOpen1] = useState(false);
   const [value1, setValue1] = useState(`Love song`);
   const [items1, setItems1] = useState([
-    {label: 'Private', value: 'private'},
-    {label: 'Public', value: 'public'},
+    {label: 'Private', value: true},
+    {label: 'Public', value: false},
   ]);
   //handle image
   const chooseImage = () => {
@@ -48,7 +46,7 @@ const UploadScreen =()=>{
       mediaType: 'photo',
     })
       .then(image => {
-        console.log('selected photo: ' + image.path);
+        console.log('selected photo: ' + image);
         setImgUrl(image.path);
         setPhoto({
           uri:image.path,
@@ -61,29 +59,8 @@ const UploadScreen =()=>{
         console.log('[error pick img]', error);
       });
   };
-
-
-  const handleUpData = (file)=>{
-    const data = new FormData();
-    data.append('file', file)
-    data.append('upload_preset', '_UploadImage')
-    data.append('cloud_name','project2cloud')
-    fetch('https://api.cloudinary.com/v1_1/project2cloud/upload',{
-      method: 'POST',
-      body: data,
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'multipart/form-data'
-      }
-    }).then(res => res.json()).then(data =>{
-      console.log('url response: '+ data.url);
-      console.log('data response: '+ data);
-    }).catch( error=>{
-      console.log('error upload image ',error);
-    })
-  }
-  //handle file .mp3
-  const chooseFile =async()=>{
+   //handle file .mp3
+   const chooseFile =async()=>{
     console.log('choose')
     try {
       const response = await DocumentPicker.pickSingle({
@@ -102,18 +79,65 @@ const UploadScreen =()=>{
     console.log('audio: ',audio);
   }
 
-  ///Test realtime database
-const handleTestButton=()=>{
-  console.log('click');
-  set(ref(db, 'users/' + 2),{
-    username: 'Quoc Toan',
-    email: 'toanquocnguyen'
-  }).then(()=>{
-    console.log('oke')
-  }).catch((error)=>{
-    console.log('loi: ',error);
-  })
-}
+  // handle upload song
+  const handleUpData = async ({photo, audio})=>{
+    console.log("-----");
+    let photoPathRes = '';
+    let audioPathRes='';
+    const data1 = new FormData();
+    data1.append('file', photo)
+    data1.append('upload_preset', '_UploadImage')
+    data1.append('cloud_name','project2cloud')
+    await fetch('https://api.cloudinary.com/v1_1/project2cloud/upload',{
+      method: 'POST',
+      body: data1,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'multipart/form-data'
+      }
+    }).then(res => res.json()).then(data =>{
+      console.log('url photo response: '+ data.url);
+      photoPathRes=data.url;
+        console.log('photoPathRes: ',photoPathRes);
+    }).catch( error=>{
+      console.log('error upload image ',error);
+    });
+    const data2 = new FormData();
+    data2.append('file', audio)
+    data2.append('upload_preset', '_UploadImage')
+    data2.append('cloud_name','project2cloud')
+    await fetch('https://api.cloudinary.com/v1_1/project2cloud/upload',{
+      method: 'POST',
+      body: data2,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'multipart/form-data'
+      }
+    }).then(res => res.json()).then(data =>{
+      console.log('url photo response: '+ data.url);
+         audioPathRes= data.url;
+        console.log('audioPathRes: ',audioPathRes);
+    }).catch( error=>{
+      console.log('error upload audio ',error);
+    })
+    if(audioPathRes&&photoPathRes){
+      // UpLoadNewSong({songName, artistname, category,photoPathRes, audioPathRes, "300", true: Boolean});
+      const newSong = {
+        songName: songName,
+        artistName: artistname,
+        category: category,
+        songArtworkUrl: photoPathRes,
+        songURL: audioPathRes,
+        duration: 300,
+        isPrivate: value1,
+      }
+      console.log(photoPathRes);
+      console.log(audioPathRes);
+      UpLoadNewSong(newSong);
+    }else{
+      alert('Upload fail! Invalid image or audio. Please try again!');
+    }
+  }
 
     return(
       <View>
@@ -136,6 +160,7 @@ const handleTestButton=()=>{
                   <TextInput style={{height:45, borderWidth:1, backgroundColor:'#f5f5f5', borderRadius: 10}}
                       value={songName}
                       placeholder={`Enter song's name`}
+                      onChangeText={(input)=> setSongName(input)}
                       >
                   </TextInput>
                 </View>
@@ -144,6 +169,7 @@ const handleTestButton=()=>{
                   <TextInput style={{height:45, borderWidth:1, backgroundColor:'#f5f5f5', borderRadius: 10}}
                       value={artistname}
                       placeholder={`Enter artist's name`}
+                      onChangeText={(input)=> setArtistName(input)}
                       >
                   </TextInput>
                 </View>
@@ -160,10 +186,10 @@ const handleTestButton=()=>{
                     showArrowIcon={true}
                     showTickIcon={true}
                     open={open}
-                    value={value}
+                    value={category}
                     items={items}
                     setOpen={setOpen}
-                    setValue={setValue}
+                    setValue={setCategory}
                     setItems={setItems}
                   />
                 </View>
@@ -231,8 +257,9 @@ const handleTestButton=()=>{
                     style={[styles.button, styles.buttonClose]}
                     onPress={() => {
                       setModalVisible(!modalVisible)
-                      handleUpData(audio);
-                      handleUpData(photo);
+                      // handleUpMultiFile({photo, audio});
+                      // handleUpData(audio);
+                      handleUpData({photo, audio});
                       }}
                   >
                     <Text style={styles.textStyle}>Upload</Text>
@@ -247,12 +274,6 @@ const handleTestButton=()=>{
               onPress={() => setModalVisible(true)}
             >
               <Text style={styles.textStyle}>+ Upload song</Text>
-            </Pressable>
-            <Pressable
-              style={[styles.button, styles.buttonOpen]}
-              onPress={()=> handleTestButton()}
-            >
-              <Text style={styles.textStyle}>Test Realtime database</Text>
             </Pressable>
         </View>
       </View>

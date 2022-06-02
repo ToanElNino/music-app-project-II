@@ -31,6 +31,7 @@ export default function SignUpLayout({navigation}) {
         console.log(emailAddress);
         console.log(password);
         CreateNewUser({emailAddress,password, userName});
+        alert('Sign up sucessful! Welcome to app');
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
