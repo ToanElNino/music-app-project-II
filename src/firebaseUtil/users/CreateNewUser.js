@@ -1,6 +1,7 @@
 import { db } from "../../../firebase";
 import { set, ref, getDatabase } from 'firebase/database';
 import { async } from "@firebase/util";
+import { UpdateuserId } from "./UserId";
 
 
 function guidGenerator() {
@@ -10,17 +11,18 @@ function guidGenerator() {
   return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 }
 
-export async function CreateNewUser({emailAddress,password, userName}){
+export async function CreateNewUser({emailAddress,password, userName, nextId}){
     console.log(emailAddress, password);
   set(ref(db, 'users/' + guidGenerator()),{
-    id: 999,
+    id: nextId,
     username: userName,
     email: emailAddress,
     password: password,
     avatarURL: null,
     user_login_method: 'firebase',
   }).then(()=>{
-    console.log('oke')
+    console.log('oke');
+    UpdateuserId(nextId);
   }).catch((error)=>{
     console.log('loi: ',error);
   })

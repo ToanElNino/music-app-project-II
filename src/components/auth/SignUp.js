@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import auth from '@react-native-firebase/auth';
 import {Picker} from '@react-native-picker/picker';
 import {
@@ -14,23 +14,35 @@ import {
   Image,
 } from 'react-native';
 import { CreateNewUser } from '../../firebaseUtil/users/CreateNewUser';
-
+import { db } from "../../../firebase";
+import { set, ref, getDatabase, onValue } from 'firebase/database';
 export default function SignUpLayout({navigation}) {
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
   const [userName, setUserName]= useState(null);
   const [userLoginMethod, setUserLoginMethod]= useState('firebase');
-
-
+  const [nextId, setNextId]= useState(null);
+ 
+  useEffect(()=>{
+    onValue(ref(db, 'userId/'+ 'd0378070-c4e5-abd9-bbc0-7ba816218e0a'), (snapshot) => {
+      const data = snapshot.val();
+      console.log(data);
+      setNextId(data.id);
+      // return data;
+      //  return data['d0378070-c4e5-abd9-bbc0-7ba816218e0a'].id;
+  })
+  },[])
+   
   const handleSubmitEvent = (emailAddress, password, userName) => {
     console.log('sign up');
+    console.log(nextId);
     auth()
       .createUserWithEmailAndPassword(emailAddress, password)
       .then(() => {
         console.log('User account created & signed in!');
         console.log(emailAddress);
         console.log(password);
-        CreateNewUser({emailAddress,password, userName});
+        CreateNewUser({emailAddress,password, userName, nextId});
         alert('Sign up sucessful! Welcome to app');
       })
       .catch(error => {

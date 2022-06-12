@@ -1,6 +1,7 @@
 import { db } from "../../../firebase";
 import { set, ref, getDatabase } from 'firebase/database';
 import { async } from "@firebase/util";
+import { UpdateSongId } from "./SongId";
 
 function guidGenerator() {
   var S4 = function() {
@@ -11,11 +12,9 @@ function guidGenerator() {
 
 export async function UpLoadNewSong(params){
     console.log('call create new song realtime database');
-    // const {songName} = params;
     console.log(params.artistName);
-    // console.log(guidGenerator());
   set(ref(db, 'songs/' + guidGenerator()),{
-    id: 1,
+    id: params.id,
     song_name: params.songName,
     artist_name: params.artistName,
     category : params.category,
@@ -25,6 +24,7 @@ export async function UpLoadNewSong(params){
     is_private: params.isPrivate,
   }).then(()=>{
     console.log('oke')
+    UpdateSongId(params.id);
   }).catch((error)=>{
     console.log('loi: ',error);
   })

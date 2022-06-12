@@ -1,6 +1,8 @@
 import React from 'react';
-import {View, Text, StyleSheet,Image,ActivityIndicator} from 'react-native';
+import {View, Text, StyleSheet,Image,ActivityIndicator, TouchableOpacity} from 'react-native';
 import LogOut from '../../../components/auth/LogOut';
+import { UpdateSongId } from '../../../firebaseUtil/songs/SongId';
+import { GetuserId, UpdateuserId } from '../../../firebaseUtil/users/UserId';
 import UserInfoItem from './UserInfoItem';
 
 const userInformation ={
@@ -12,6 +14,13 @@ const userInformation ={
 }
 
 const UserScreen =()=>{
+  async function handleTest(){
+    // const nextID = await GetuserId();
+    // console.log('next: ', nextID);
+    // UpdateuserId(0);
+    UpdateSongId(0);
+  }
+
     return (
         <View style={styles.notificationContainer}>
           <Image
@@ -45,6 +54,13 @@ const UserScreen =()=>{
               />
             </View>
           )}
+          <View style={{backgroundColor: 'red', paddingHorizontal: 20, paddingVertical: 10,}}>
+            <TouchableOpacity onPress={() => handleTest()}>
+              <Text>
+                Test
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       );
 }

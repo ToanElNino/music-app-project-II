@@ -6,7 +6,8 @@ import ImagePicker from 'react-native-image-crop-picker';
 import DocumentPicker,{ types } from 'react-native-document-picker';
 const {width, height} = Dimensions.get('screen');
 import { UpLoadNewSong } from '../../../firebaseUtil/songs/UpLoadNewSong';
-
+import { db } from "../../../../firebase";
+import { set, ref, getDatabase, onValue } from 'firebase/database';
 
 const UploadScreen =()=>{
   const [modalVisible, setModalVisible] = useState(false);
@@ -23,6 +24,7 @@ const UploadScreen =()=>{
 // url respone
  const [songURLRes, setSongUrlRes]= useState('');
  const [audioURLRes, setAudioUrlRes]= useState('');
+ const [nextId, setNextId]= useState(null);
 
 ///picker category
   const [open, setOpen] = useState(false);
@@ -40,6 +42,14 @@ const UploadScreen =()=>{
     {label: 'Private', value: true},
     {label: 'Public', value: false},
   ]);
+  //get Id for song
+  useEffect(()=>{
+    onValue(ref(db, 'userId/'+ 'd0378070-c4e5-abd9-bbc0-7ba816218e0a'), (snapshot) => {
+      const data = snapshot.val();
+      console.log(data);
+      setNextId(data.id);
+  })
+  },[])
   //handle image
   const chooseImage = () => {
     ImagePicker.openPicker({
@@ -123,6 +133,7 @@ const UploadScreen =()=>{
     if(audioPathRes&&photoPathRes){
       // UpLoadNewSong({songName, artistname, category,photoPathRes, audioPathRes, "300", true: Boolean});
       const newSong = {
+        id: nextId,
         songName: songName,
         artistName: artistname,
         category: category,
