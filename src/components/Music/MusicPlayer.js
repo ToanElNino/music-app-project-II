@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Button, Pressable, Image, Dimensions, TouchableOpacity, Linking} from 'react-native';
+import {View, Text, StyleSheet, Button, Pressable, Image, Dimensions, TouchableOpacity, Linking, Modal, ScrollView, TextInput} from 'react-native';
 import TrackPlayer from 'react-native-track-player';
 import songs from '../../../model/data';
 import {useTrackPlayerProgress} from 'react-native-track-player';
@@ -8,8 +8,42 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {Animated} from 'react-native';
+import CommentItem from '../Comments/Comment';
 // import LinearGradient from 'react-native-linear-gradient';
 // const {position, duration} = useTrackPlayerProgress(250);
+
+const comments =[
+  {
+    id: 1,
+    userName: 'toanelnino',
+    content: 'Nice song',
+    commentDate: '20-10-2020',
+  },
+  {
+    id: 2,
+    userName: 'toanelnino',
+    content: 'Nice song',
+    commentDate: '20-10-2020',
+  },
+  {
+    id: 3,
+    userName: 'toanelnino',
+    content: 'Nice song',
+    commentDate: '20-10-2020',
+  },
+  {
+    id: 4,
+    userName: 'toanelnino',
+    content: 'Nice song',
+    commentDate: '20-10-2020',
+  },
+  {
+    id: 5,
+    userName: 'toanelnino',
+    content: 'Nice song',
+    commentDate: '20-10-2020',
+  }
+]
 
 const {width, height} = Dimensions.get('screen');
 // TrackPlayer.updateOptions({
@@ -22,6 +56,8 @@ const {width, height} = Dimensions.get('screen');
 //   ],
 // });
 const MusicPlayer = (props) => {
+  const [comment, setComment] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
   //share facebook
   const [facebookShareURL, setFacebookShareURL] = useState(
     props.route.params.song.url,
@@ -62,6 +98,10 @@ const MusicPlayer = (props) => {
     },1000);
 
   },[song.id])
+
+  useEffect(()=>{
+    console.log('get song id');
+  },[])
   const [isTrackPlayerInit, setIsTrackPlayerInit] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
 
@@ -142,6 +182,10 @@ const MusicPlayer = (props) => {
           console.log('fail');
         });
 }
+
+  const handleSendComment = ()=>{
+    console.log(comment);
+  }
   return (
     <View style={styles.container}>
       <View style={styles.songDetails}>
@@ -157,18 +201,13 @@ const MusicPlayer = (props) => {
         />
       </View>
       <View style={styles.slider}>
-         {/* <Text>{clockState}</Text> */}
-         {/* <Text>{sliderValue *100}</Text> */}
         <Slider
-          // style={{width: 400, height: 40}}
           minimumValue={0}
           maximumValue={1}
           value={sliderValue}
           minimumTrackTintColor="green"
           maximumTrackTintColor="#000000"
           onSlidingStart={slidingStarted}
-          // onValueChange={value1 => setSliderValue(parseInt(value1*100)+ '%')}
-          // onSlidingComplete={slidingCompleted}
         />
       </View>
       <View style={{flexDirection:'row', justifyContent:'space-around'}}>
@@ -223,7 +262,10 @@ const MusicPlayer = (props) => {
           <AntDesign name="hearto" size={25} color="black" />
         </View>
         <View style={styles.reactButton}>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
           <FontAwesome name="comment-o" size={25} color="black" />
+
+          </TouchableOpacity>
         </View>
         <View style={styles.reactButton}>
         <TouchableOpacity onPress={()=> handleShareFacebook()}>
@@ -232,6 +274,64 @@ const MusicPlayer = (props) => {
         </TouchableOpacity>
         </View>
       </View>
+      {/* modal */}
+      <View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <ScrollView style={{maxHeight: height*5/10, backgroundColor: 'white', width: width*85/100}}>
+          {
+            comments.map((comment, index)=>{
+              return(
+                <View style={styles.itemContainer} key={index}>
+                  <View style={{marginLeft: 10 }}>
+                    <View>
+                      <Text>{comment.userName + ':'}</Text>
+                    </View>
+                    <View>
+                      <Text>{comment.content}</Text>
+                    </View>
+                  </View>
+                   <View>
+                     <Text style={{color:'black'}}>{comment.commentDate}</Text>
+                   </View>
+              </View>
+              )
+            })
+          }
+          </ScrollView>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Phone or email"
+              placeholderTextColor="#003f5c"
+              value={comment}
+              onChangeText={text => {
+                setComment(text)
+                }}
+            />
+             <View style={{backgroundColor: 'red', marginTop: 0, paddingTop: 11, paddingHorizontal: 10, borderRadius: 5}}>
+              <TouchableOpacity onPress={()=> handleSendComment()}>
+                <Text style={{alignSelf: 'center', color: 'white',fontSize: 16, fontWeight: '600'}}>
+                  Send
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        <View>
+          <TouchableOpacity onPress={()=> setModalVisible(false)}>
+            <Text>Hide comments</Text>
+          </TouchableOpacity>
+        </View>
+        </View>
+      </Modal>
+    </View>
     </View>
   );
 };
@@ -276,5 +376,92 @@ const styles = StyleSheet.create({
   },
   reactButton: {
     marginHorizontal: 50,
+  },
+  //modal
+  centeredView: {
+    height: height*70/100,
+    width: width * 9/10,
+    // flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    // marginTop: 22,
+    backgroundColor: 'white',
+    alignSelf: 'center',
+    marginTop: height * 1/10,
+    borderRadius: 20,
+    shadowColor: "#000",
+shadowOffset: {
+	width: 0,
+	height: 2,
+},
+shadowOpacity: 0.25,
+shadowRadius: 3.84,
+
+elevation: 5,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  },
+  itemContainer:{
+    backgroundColor: 'grey', 
+    marginVertical: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+        width: 0,
+        height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    flexDirection: 'row'
+  },
+  textInput: {
+    width: 220,
+    fontSize: 15,
+    padding: 10,
+    color: '#6D1D3A',
+    borderColor: 'grey',
+    borderWidth: 0.5,
+    borderRadius: 10,
+    paddingHorizontal: 20,
+    marginRight: 10
+  },
+  inputView: {
+    justifyContent: 'space-between',
+    flexDirection:'row',
   },
 });
