@@ -71,20 +71,21 @@ const MusicPlayer = (props) => {
   const [sliding, setSliding] = useState('Inactive')
 
   const [clockState, setClockState]= useState();
-  useEffect(()=>{
-    setInterval(()=>{
-      const date = new Date();
-      // setClockState(date.toLocaleTimeString())
-      // setSliderValue(sliderValue + 0.1);
-    },1000)
-  },[])
+  // useEffect(()=>{
+  //   setInterval(()=>{
+  //     const date = new Date();
+  //     // setClockState(date.toLocaleTimeString())
+  //     // setSliderValue(sliderValue + 0.1);
+  //   },1000)
+  // },[])
   console.log(props.route.params.song);
   const song=props.route.params.song;
+  const convertSong = {...song, url:props.route.params.song.song_url} 
   //console.log(props.route.params.song_url);
   useEffect(()=>{
     const trackPlayerInit = async () => {
       await TrackPlayer.setupPlayer();
-      await TrackPlayer.add(songs);
+      await TrackPlayer.add(convertSong);
       return true;
     };
     const startPlayer = async () => {
@@ -189,13 +190,13 @@ const MusicPlayer = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.songDetails}>
-        <Text style={styles.songName}>{song.title}</Text>
-        <Text style={styles.songArtist}>{song.artist}</Text>
+        <Text style={styles.songName}>{song.song_name}</Text>
+        <Text style={styles.songArtist}>{song.artist_name}</Text>
       </View>
       <View style={styles.songImage}>
         <Image
           source={{
-            uri: song.artwork
+            uri: song.song_artwork_url
           }}
           style={{width: 220, height: 220, borderRadius: 220 / 2}}
         />

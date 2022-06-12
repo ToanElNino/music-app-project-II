@@ -1,8 +1,9 @@
 /* eslint-disable react/self-closing-comp */
-import React from 'react';
-import {View, Text, StyleSheet, Image, FlatList, Pressable} from 'react-native';
+import React,{useEffect, useState} from 'react';
+import {View, Text, StyleSheet, Image, FlatList, Pressable, ActivityIndicator} from 'react-native';
 //import {Data} from '../../dataMock/NearList';
-
+import { db } from "../../../firebase";
+import { set, ref, getDatabase, onValue } from 'firebase/database';
 const Data = [
     {
       id: 1,
@@ -38,12 +39,13 @@ const Data = [
     },
   ];
 export const TopSongsList = ({navigation}) => {
+  const [listSong, setListSong]= useState([]);
   const Item = ({title}) => (
     <View style={styles.item}>
       <View style={styles.restaurantImage}>
         <Image
           resizeMode="contain"
-          source={{uri: `${title.artwork}`}}
+          source={{uri: `${title.song_artwork_url}`}}
           style={styles.restaurantImage}></Image>
       </View>
     </View>
@@ -58,20 +60,39 @@ export const TopSongsList = ({navigation}) => {
       <Item title={item} />
     </Pressable>
   );
+  useEffect(()=>{
+    setListSong([]);
+    const tmp =[];
+    onValue(ref(db), (snapshot)=>{
+      const data = snapshot.val();
+      console.log('songs: ', data.songs);
+      for(let song in data.songs){
+        console.log('song: ', data.songs[song])
+        tmp.push(data.songs[song])
+      }
+    })
+    setTimeout(()=>{
+      setListSong(tmp);
+    }, 1000)
+  },[])
   return (
     <View style={styles.container}>
       <View style={styles.textHeader}>
         <Text style={{fontSize: 16, color: '#191970', fontWeight:'bold'}}>Top Songs Today</Text>
         {/* <Text style={{fontSize: 14, color: '#00bfff'}}>Xem tất cả</Text> */}
       </View>
-      <View style={styles.itemListContainer}>
+      {
+        listSong.length ? (
+          <View style={styles.itemListContainer}>
         <FlatList
           horizontal={true}
-          data={Data}
+          data={listSong}
           renderItem={({item}) => renderItem({item, navigation})}
           keyExtractor={item => item.id}
         />
       </View>
+        ) : <ActivityIndicator/>
+      }
     </View>
   );
 };
