@@ -17,8 +17,7 @@ export async function CreateNewUser({emailAddress,password, userName, nextId}){
     id: nextId,
     username: userName,
     email: emailAddress,
-    password: password,
-    avatarURL: null,
+    avatarURL: '',
     user_login_method: 'firebase',
   }).then(()=>{
     console.log('oke');

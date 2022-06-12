@@ -28,8 +28,6 @@ export default function SignUpLayout({navigation}) {
       const data = snapshot.val();
       console.log(data);
       setNextId(data.id);
-      // return data;
-      //  return data['d0378070-c4e5-abd9-bbc0-7ba816218e0a'].id;
   })
   },[])
    

@@ -6,10 +6,16 @@ import LogOut from './src/components/auth/LogOut';
 import SignUpLayout from './src/components/auth/SignUp';
 import LoginLayout from './src/components/auth/LogIn';
 import Tabs from './src/navigation/tabs';
+import { Provider } from 'react-redux';
+import store from './src/store/index';
+import {useDispatch} from 'react-redux';
+import {login} from './src/reducer/user/userReducer';
+
 // import { db } from './firebase';
 const Stack = createNativeStackNavigator();
 
 const App = () => {
+  const dispatch = useDispatch();
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
@@ -17,6 +23,7 @@ const App = () => {
   // Handle user state changes
   function onAuthStateChanged(user) {
     setUser(user);
+    dispatch(login(user))
     if (initializing) setInitializing(false);
   }
 
@@ -25,85 +32,85 @@ const App = () => {
     return subscriber;
   }, []);
   return (
-    <NavigationContainer>
-      {user ? (
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Log out"
-            component={LogOut}
-            options={{
-              title: 'Log out',
-              headerStyle: {
-                backgroundColor: '#3A5BB3',
-              },
-              headerTintColor: '#fff',
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-            }}
-          />
-          <Stack.Screen
-            name="Music player"
-            component={Tabs}
-            options={{
-              title: 'Music player',
-              headerStyle: {
-                backgroundColor: '#3A5BB3',
-              },
-              headerTintColor: '#fff',
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-            }}
-          />
-        </Stack.Navigator>
-      ) : (
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Sign in"
-            component={LoginLayout}
-            options={{
-              title: 'Sign in',
-              headerStyle: {
-                backgroundColor: '#3A5BB3',
-              },
-              headerTintColor: '#fff',
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-            }}
-          />
-           <Stack.Screen
-            name="Music player"
-            component={Tabs}
-            options={{
-              title: 'Music player',
-              headerStyle: {
-                backgroundColor: '#3A5BB3',
-              },
-              headerTintColor: '#fff',
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-            }}
-          />
-          <Stack.Screen
-            name="Sign up"
-            component={SignUpLayout}
-            options={{
-              title: 'Sign up', //Set Header Title
-              headerStyle: {
-                backgroundColor: '#3A5BB3', //Set Header color
-              },
-              headerTintColor: '#fff', //Set Header text color
-              headerTitleStyle: {
-                fontWeight: 'bold', //Set Header text style
-              },
-            }}
-          />
-        </Stack.Navigator>
-      )}
-    </NavigationContainer>
+      <NavigationContainer>
+        {user ? (
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Log out"
+              component={LogOut}
+              options={{
+                title: 'Log out',
+                headerStyle: {
+                  backgroundColor: '#3A5BB3',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
+              }}
+            />
+            <Stack.Screen
+              name="Music player"
+              component={Tabs}
+              options={{
+                title: 'Music player',
+                headerStyle: {
+                  backgroundColor: '#3A5BB3',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
+              }}
+            />
+          </Stack.Navigator>
+        ) : (
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Sign in"
+              component={LoginLayout}
+              options={{
+                title: 'Sign in',
+                headerStyle: {
+                  backgroundColor: '#3A5BB3',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
+              }}
+            />
+            <Stack.Screen
+              name="Music player"
+              component={Tabs}
+              options={{
+                title: 'Music player',
+                headerStyle: {
+                  backgroundColor: '#3A5BB3',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
+              }}
+            />
+            <Stack.Screen
+              name="Sign up"
+              component={SignUpLayout}
+              options={{
+                title: 'Sign up', //Set Header Title
+                headerStyle: {
+                  backgroundColor: '#3A5BB3', //Set Header color
+                },
+                headerTintColor: '#fff', //Set Header text color
+                headerTitleStyle: {
+                  fontWeight: 'bold', //Set Header text style
+                },
+              }}
+            />
+          </Stack.Navigator>
+        )}
+      </NavigationContainer>
   );
 };
 

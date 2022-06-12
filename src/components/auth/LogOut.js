@@ -2,7 +2,8 @@ import auth from '@react-native-firebase/auth';
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-const LogOut = ({navigation}) => {
+const LogOut = ({navigation, user}) => {
+  console.log(user);
   const handleLogout = (email, password) => {
     auth()
       .signOut()

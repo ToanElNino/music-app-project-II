@@ -44,7 +44,7 @@ const UploadScreen =()=>{
   ]);
   //get Id for song
   useEffect(()=>{
-    onValue(ref(db, 'userId/'+ 'd0378070-c4e5-abd9-bbc0-7ba816218e0a'), (snapshot) => {
+    onValue(ref(db, 'songId/'+ '8e685ca0-7d58-c94e-d34e-f25be9474cce'), (snapshot) => {
       const data = snapshot.val();
       console.log(data);
       setNextId(data.id);

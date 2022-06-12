@@ -14,7 +14,8 @@ export async function UpLoadNewSong(params){
     console.log('call create new song realtime database');
     console.log(params.artistName);
   set(ref(db, 'songs/' + guidGenerator()),{
-    id: params.id,
+    id: params.id + 1,
+    song_stream: 0,
     song_name: params.songName,
     artist_name: params.artistName,
     category : params.category,

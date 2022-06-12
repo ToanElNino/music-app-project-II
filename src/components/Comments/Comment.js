@@ -12,7 +12,7 @@ const CommentItem = (comment)=>{
 export default CommentItem;
 const styles = StyleSheet.create({
     itemContainer:{
-        backgroundColor: 'grey', 
+        backgroundColor: '#f5fffa', 
         marginVertical: 10,
         paddingVertical: 5,
         borderRadius: 10,

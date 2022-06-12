@@ -73,7 +73,7 @@ export const TopSongsList = ({navigation}) => {
     })
     setTimeout(()=>{
       setListSong(tmp);
-    }, 1000)
+    }, 10000)
   },[])
   return (
     <View style={styles.container}>

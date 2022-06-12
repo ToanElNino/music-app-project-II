@@ -2,6 +2,7 @@ import React from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 
 const UserInfoItem = ({labelTitle, infoTitle}) => {
+  console.log(infoTitle);
   return (
     <View style={styles.itemContainer}>
       <Text style={styles.labelTitle}>{labelTitle}</Text>
@@ -24,6 +25,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     color: '#6D1D3A',
     width: 100,
+    marginRight: 50,
   },
   infoTitle: {
     marginVertical: 8,

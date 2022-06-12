@@ -42,6 +42,24 @@ const comments =[
     userName: 'toanelnino',
     content: 'Nice song',
     commentDate: '20-10-2020',
+  },
+  {
+    id: 6,
+    userName: 'toanelnino',
+    content: 'Nice song',
+    commentDate: '20-10-2020',
+  },
+  {
+    id: 7,
+    userName: 'toanelnino',
+    content: 'Nice song',
+    commentDate: '20-10-2020',
+  },
+  {
+    id: 8,
+    userName: 'toanelnino',
+    content: 'Nice song',
+    commentDate: '20-10-2020',
   }
 ]
 
@@ -317,7 +335,7 @@ const MusicPlayer = (props) => {
                 setComment(text)
                 }}
             />
-             <View style={{backgroundColor: 'red', marginTop: 0, paddingTop: 11, paddingHorizontal: 10, borderRadius: 5}}>
+             <View style={{backgroundColor: '#3A5BB3', marginTop: 0, paddingTop: 11, paddingHorizontal: 10, borderRadius: 5}}>
               <TouchableOpacity onPress={()=> handleSendComment()}>
                 <Text style={{alignSelf: 'center', color: 'white',fontSize: 16, fontWeight: '600'}}>
                   Send
@@ -325,9 +343,16 @@ const MusicPlayer = (props) => {
               </TouchableOpacity>
             </View>
           </View>
-        <View>
+        <View style={{
+            width: width/2,
+            backgroundColor: '#3A5BB3',
+            padding: 10,
+            alignItems: 'center',
+            marginTop: 25,
+            borderRadius: 10,}}
+          >
           <TouchableOpacity onPress={()=> setModalVisible(false)}>
-            <Text>Hide comments</Text>
+            <Text style={{color: 'white', fontSize: 16}}>Hide comments</Text>
           </TouchableOpacity>
         </View>
         </View>
@@ -436,7 +461,7 @@ elevation: 5,
     textAlign: "center"
   },
   itemContainer:{
-    backgroundColor: 'grey', 
+    backgroundColor: '#fffafa', 
     marginVertical: 10,
     paddingVertical: 5,
     borderRadius: 10,
