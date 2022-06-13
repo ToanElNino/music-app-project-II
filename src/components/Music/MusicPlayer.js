@@ -416,14 +416,14 @@ const styles = StyleSheet.create({
     marginTop: height * 1/10,
     borderRadius: 20,
     shadowColor: "#000",
-shadowOffset: {
-	width: 0,
-	height: 2,
-},
-shadowOpacity: 0.25,
-shadowRadius: 3.84,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
 
-elevation: 5,
+    elevation: 5,
   },
   modalView: {
     margin: 20,

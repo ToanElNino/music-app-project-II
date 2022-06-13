@@ -34,7 +34,9 @@ const App = () => {
   return (
       <NavigationContainer>
         {user ? (
-          <Stack.Navigator>
+          <Stack.Navigator screenOptions={{
+    headerShown: false
+  }}>
             <Stack.Screen
               name="Log out"
               component={LogOut}
