@@ -1,6 +1,5 @@
 import { db } from "../../../firebase";
-import { set, ref, getDatabase } from 'firebase/database';
-import { async } from "@firebase/util";
+import { set, ref} from 'firebase/database';
 import { UpdateuserId } from "./UserId";
 
 
@@ -19,6 +18,8 @@ export async function CreateNewUser({emailAddress,password, userName, nextId}){
     email: emailAddress,
     avatarURL: '',
     user_login_method: 'firebase',
+    home_address: '',
+    phone_number: '',
   }).then(()=>{
     console.log('oke');
     UpdateuserId(nextId);

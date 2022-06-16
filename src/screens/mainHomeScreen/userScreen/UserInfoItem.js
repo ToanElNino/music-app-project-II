@@ -4,6 +4,7 @@ import { Modal } from 'react-native-paper';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const {width, height} = Dimensions.get('screen');
+const checkField ='Email address: Login method: User id: ';
 const UserInfoItem = ({labelTitle, infoTitle, handleEditInformation}) => {
   const [curInfo, setCurInfo] = useState(infoTitle);
   const [modalVisible, setModalVisible] = useState(false);
@@ -16,9 +17,11 @@ const UserInfoItem = ({labelTitle, infoTitle, handleEditInformation}) => {
           <Text style={styles.infoTitle}>{infoTitle}</Text>
         </View>
         <View style={{marginLeft: 10, marginTop: 5}}>
-        {labelTitle === 'User id:' ? null :(
+        {checkField.includes(labelTitle) ? null :(
           <TouchableOpacity onPress={()=> {
             setModalVisible(true);
+            infoTitle === 'No information' ? setCurInfo('') : setCurInfo(infoTitle)
+            console.log(infoTitle);
             }}>
             <FontAwesome name="edit" size={25}/>
           </TouchableOpacity>
