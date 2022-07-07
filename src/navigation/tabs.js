@@ -1,10 +1,10 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {View, Text, Image, StyleSheet} from 'react-native';
-import UserScreen from '../screens/mainHomeScreen/userScreen/UserScreen';
+import UserDrawerSceen from '../screens/UserScreen';
 import MainHomeScreen from '../screens/mainHomeScreen/MainHomeScreen';
 import MusicPlayer from '../components/Music/MusicPlayer';
-import UploadScreen from '../screens/mainHomeScreen/uploadScreen/UploadScreen';
+import SongMangermentScreen from '../screens/SongManagermentScreen';
 
 const Tab= createBottomTabNavigator();
 
@@ -86,7 +86,7 @@ export default function Tabs(){
           />
           <Tab.Screen
             name="Upload"
-            component={UploadScreen}
+            component={SongMangermentScreen}
             options={{
               showLabel: false,
               headerShown: false,
@@ -121,7 +121,7 @@ export default function Tabs(){
           />
           <Tab.Screen
             name="User"
-            component={UserScreen}
+            component={UserDrawerSceen}
             options={{
               showLabel: false,
               headerShown: false,

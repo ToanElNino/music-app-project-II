@@ -52,7 +52,7 @@ export const TopSongsList = ({navigation}) => {
   );
   const renderItem = ({item, navigation}) => (
     <Pressable onPress={()=>{
-      console.log(navigation);
+      // console.log(navigation);
       navigation.navigate('Love Songs',{
          song: item,
       })
@@ -63,17 +63,17 @@ export const TopSongsList = ({navigation}) => {
   useEffect(()=>{
     setListSong([]);
     const tmp =[];
-    onValue(ref(db), (snapshot)=>{
+    onValue(ref(db, '/songs'), (snapshot)=>{
       const data = snapshot.val();
-      console.log('songs: ', data.songs);
-      for(let song in data.songs){
-        console.log('song: ', data.songs[song])
-        tmp.push(data.songs[song])
+      console.log('songs: ', data);
+      for(let song in data){
+        // console.log('song: ', data.songs[song])
+        tmp.push(data[song])
       }
     })
     setTimeout(()=>{
       setListSong(tmp);
-    }, 10000)
+    }, 3000)
   },[])
   return (
     <View style={styles.container}>

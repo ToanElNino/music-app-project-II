@@ -5,8 +5,8 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import DocumentPicker,{ types } from 'react-native-document-picker';
 const {width, height} = Dimensions.get('screen');
-import { UpLoadNewSong } from '../../../firebaseUtil/songs/UpLoadNewSong';
-import { db } from "../../../../firebase";
+import { UpLoadNewSong } from '../../firebaseUtil/songs/UpLoadNewSong';
+import { db } from "../../../firebase";
 import { set, ref, getDatabase, onValue } from 'firebase/database';
 
 const UploadScreen =()=>{

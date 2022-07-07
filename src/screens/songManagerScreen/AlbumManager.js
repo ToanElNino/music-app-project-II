@@ -1,10 +1,11 @@
 import React from "react";
 import {View, Text} from 'react-native';
-const uploadListScreen =() =>{
+
+const AlbumManagerScreen =() =>{
     return(
         <View>
-            <Text>Upload List Manager</Text>
+            <Text>Favorite List Manager</Text>
         </View>
     )
 }
-export default uploadListScreen;
+export default AlbumManagerScreen;

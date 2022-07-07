@@ -162,6 +162,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffff',
     alignItems: 'center',
     justifyContent: 'center',
+
   },
   image: {
     height: '25%',

@@ -1,23 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet,Image,ActivityIndicator, TouchableOpacity, Modal, Alert,Dimensions} from 'react-native';
-import LogOut from '../../../components/auth/LogOut';
+import LogOut from '../../components/auth/LogOut';
 import UserInfoItem from './UserInfoItem';
 import {useSelector} from 'react-redux';
 import ImagePicker from 'react-native-image-crop-picker';
-import { userDataSelector } from '../../../reducer/user/userReducer';
+import { userDataSelector } from '../../reducer/user/userReducer';
 import { onValue } from 'firebase/database';
-import { db } from '../../../../firebase';
-import { set, ref, getDatabase } from 'firebase/database';
-import { async } from '@firebase/util';
-const {width, height} = Dimensions.get('screen');
+import { db } from '../../../firebase';
+import { set, ref } from 'firebase/database';
 
-// const userInformation ={
-//     name: 'Nguyen Quoc Toan',
-//     surname: 'Toan',
-//     userName: 'toanquocnguyen1',
-//     emailAddress:'toanquocnguyen192@gmail.com',
-//     id: 96,
-// }
+const {width, height} = Dimensions.get('screen');
 
 const UserScreen =()=>{
   const [userAvatar, setUserAvatar]= useState(null);
@@ -188,9 +180,9 @@ const UserScreen =()=>{
               height: width / 8,
               marginTop: -width / 2 + width / 4 + width/16,
               marginLeft: width / 2 - width / 8,
-              padding: 20
+              padding: 10
               }}
-              source={require('../../../assets/icons/camera.png')}>
+              source={require('../../assets/icons/camera.png')}>
               </Image>      
 
           </View>
@@ -302,7 +294,7 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
     },
     userInformations: {
-      marginTop: 20,
+      marginTop: 10,
     },
     centeredView: {
       flex: 1,

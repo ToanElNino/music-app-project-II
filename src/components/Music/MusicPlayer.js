@@ -9,6 +9,15 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {Animated} from 'react-native';
 import CommentItem from '../Comments/Comment';
+import { UpdateFavoriteId, GetFavoriteId } from '../../firebaseUtil/favorite/FavoriteId';
+import { db } from "../../../firebase";
+import { set, ref, getDatabase, onValue } from 'firebase/database';
+import { userDataSelector } from '../../reducer/user/userReducer';
+import {useSelector} from 'react-redux';
+import {UpdateFavoriteAlbum} from '../../firebaseUtil/favorite/UpdateFavoriteAlbum';
+import { async } from '@firebase/util';
+import { UpdateSongComment } from '../../firebaseUtil/comments/UpdateSongComment';
+
 // import LinearGradient from 'react-native-linear-gradient';
 // const {position, duration} = useTrackPlayerProgress(250);
 
@@ -64,25 +73,22 @@ const comments =[
 ]
 
 const {width, height} = Dimensions.get('screen');
-// TrackPlayer.updateOptions({
-//   stopWithApp: false,
-//   capabilities: [
-//     TrackPlayer.CAPABILITY_PLAY,
-//     TrackPlayer.CAPABILITY_PAUSE,
-//     TrackPlayer.CAPABILITY_JUMP_FORWARD,
-//     TrackPlayer.CAPABILITY_JUMP_BACKWARD,
-//   ],
-// });
 const MusicPlayer = (props) => {
+  const [checkLikeSongIdList,SetcheckLikeSongIdList] = useState([]);
+  const userData = useSelector(userDataSelector);
+  const [userInfo, setUserInfo] = useState(null);
+  const [likeList, setLikeList] = useState(null);
+  console.log('check user info from store: ', userData);
+
+  //comments
   const [comment, setComment] = useState(null);
+  const [commentList, setCommentList]=useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   //share facebook
   const [facebookShareURL, setFacebookShareURL] = useState(
     props.route.params.song.url,
   );
-  const [postContent, setPostContent] = useState(
-    'Hello Guys, This is a testing of facebook share example',
-  );
+
     //option button
   const [isShuffle, setIsShuffle]= useState(false);
   const [isLoop, setIsLoop]= useState(false);
@@ -119,8 +125,36 @@ const MusicPlayer = (props) => {
   },[song.id])
 
   useEffect(()=>{
-    console.log('get song id');
-  },[])
+    console.log('re-render');
+    let data= null;
+    onValue(ref(db, 'favoriteAlbum/'+ userData.id), (snapshot) => {
+      data = snapshot.val();
+      console.log(data);
+      if(data.songs ==='init'){
+        setLikeList([]);
+      }else{
+        setLikeList(data.songs);
+        let tmp=[];
+        for(let i=0; i<data.songs.length; i++){
+          tmp.push(data.songs[i].id);
+        }
+        console.log(tmp);
+        SetcheckLikeSongIdList(tmp);
+      }
+    })
+    let data1 = null;
+    onValue(ref(db, 'comments/'+ props.route.params.song.id), (snapshot) => {
+      data1 = snapshot.val();
+      console.log(data1);
+      if(data1.comments ==='init'){
+        setCommentList([]);
+      }else{
+        setCommentList(data1.comments);
+      }
+    })
+    setUserInfo(userData);
+  }, [userData])
+
   const [isTrackPlayerInit, setIsTrackPlayerInit] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
 
@@ -202,8 +236,87 @@ const MusicPlayer = (props) => {
         });
 }
 
-  const handleSendComment = ()=>{
+  async function handleSendComment(){
+    console.log('call handle send comment');
     console.log(comment);
+    console.log(userInfo.username);
+    console.log(props.route.params.song.id);
+    let data = null;
+    let updateList = [];
+    let newComment= {
+      username: userInfo.username,
+      avatarUrl: userInfo.avatarURL,
+      content: comment,
+      creationTime: new Date().toLocaleDateString()
+    }
+    if(commentList.length===0){
+      updateList = [newComment]
+    }else{
+      updateList=[...commentList, newComment];
+    }
+    console.log('update list: ', updateList);
+    UpdateSongComment({songId: props.route.params.song.id, commentList: updateList})
+    setComment('');
+  }
+  async function handleLikeSong(){
+    console.log('call handle like song');
+    let data = null;
+    let updateList = [];
+    await onValue(ref(db, 'favoriteAlbum/'+ userInfo.id), (snapshot) => {
+      data = snapshot.val();
+      console.log(data);
+      if(data.songs ==='init'){
+        updateList=[song];
+      }else{
+        updateList=[...data.songs, song];
+      }
+    })
+    console.log('update list: ', updateList);
+    let nextId=userInfo.id;
+    let list = updateList;
+    UpdateFavoriteAlbum({nextId, list});
+  }
+  //delete like
+  const handleUnLikeSong = () =>{
+    console.log('delete song from favoritelist');
+    // onValue(ref(db, 'favoriteAlbum/'+ userInfo.id), (snapshot) => {
+    //   let data = snapshot.val();
+    //   console.log(data);
+    //   if(data.songs.length===1){ // neu chi co 1 bai hat thi songs thanh init
+    //     console.log('lengh 1: ',data.songs.length );
+    //     let nextId=userInfo.id;
+    //     let list = "init";
+    //     UpdateFavoriteAlbum({nextId, list});
+    //   }else{
+    //     console.log('lengh: ',data.songs.length );
+    //     let updateList = [];
+    //     for(let i =0; i < data.songs.length; i++){
+    //       console.log(data.songs[i].id);
+    //       if(data.songs[i].id !== song.id)
+    //        updateList.push(data.songs[i]);
+    //     }
+    //     console.log('list song update with length > 1');
+    //     let nextId=userInfo.id;
+    //     let list = updateList;
+    //     UpdateFavoriteAlbum({nextId, list});
+    //   }
+    // })
+    // let data1= null;
+    // onValue(ref(db, 'favoriteAlbum/'+ userData.id), (snapshot) => {
+    //   data1 = snapshot.val();
+    //   console.log(data1);
+    // })
+    // if(data1.songs ==='init'){
+    //   setLikeList([]);
+    // }else{
+    //   setLikeList(data1.songs);
+    //   let tmp=[];
+    //   for(let i=0; i<data1.songs.length; i++){
+    //     tmp.push(data1.songs[i].id);
+    //   }
+    //   console.log(tmp);
+    //   SetcheckLikeSongIdList(tmp);
+    // }
   }
   return (
     <View style={styles.container}>
@@ -278,7 +391,16 @@ const MusicPlayer = (props) => {
       </View>
       <View style={styles.reactButtons}>
         <View style={styles.reactButton}>
-          <AntDesign name="hearto" size={25} color="black" />
+        {
+          checkLikeSongIdList.includes(song.id) ? 
+            (<TouchableOpacity onPress={()=> handleUnLikeSong()}>
+            <AntDesign name="heart" size={25} color="red" />
+             </TouchableOpacity>) 
+            : 
+            (<TouchableOpacity onPress={()=> handleLikeSong()}>
+            <AntDesign name="hearto" size={25} color="black" />
+             </TouchableOpacity>)
+        }
         </View>
         <View style={styles.reactButton}>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
@@ -302,19 +424,30 @@ const MusicPlayer = (props) => {
         onRequestClose={() => {
           setModalVisible(!modalVisible);
         }}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps={'always'}
       >
         <View style={styles.centeredView}>
           <ScrollView style={{maxHeight: height*5/10, backgroundColor: 'white', width: width*85/100}}>
+          {commentList.length ? null : (<View style={{alignContent:'center', alignSelf:'center', marginTop: 200,}}>
+            <Text style={{fontSize: 17}}>No comments</Text>
+          </View>   )}
           {
-            comments.map((comment, index)=>{
+            commentList.map((comment, index)=>{
               return(
                 <View style={styles.itemContainer} key={index}>
+                <View>
+                  <Image source={{uri: comment.avatarUrl !==  '' ? comment.avatarUrl : require('../../assets/icons/User.png')}} style={{height: 50, width: 50, borderRadius: 25}}/>
+                </View>
                   <View style={{marginLeft: 10 }}>
                     <View>
-                      <Text>{comment.userName + ':'}</Text>
+                      <Text style={{fontSize: 16, fontWeight: '700'}}>{comment.username}</Text>
                     </View>
                     <View>
-                      <Text>{comment.content}</Text>
+                      <Text style={{fontSize: 16, fontWeight: '400'}}>{comment.content}</Text>
+                    </View>
+                    <View>
+                      <Text style={{fontSize: 13, fontWeight: '300'}}>{comment.creationTime}</Text>
                     </View>
                   </View>
                    <View>
@@ -371,6 +504,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignContent: 'center',
     marginBottom: 100,
+    marginTop: 20,
   },
   songDetails: {
     alignItems: 'center',
@@ -379,6 +513,7 @@ const styles = StyleSheet.create({
   songName: {
     fontSize: 25,
     fontWeight: 'bold',
+    marginVertical: 10,
   },
   songArtist: {
     fontSize: 16,
@@ -399,6 +534,7 @@ const styles = StyleSheet.create({
   reactButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginTop: 10,
   },
   reactButton: {
     marginHorizontal: 50,
@@ -461,7 +597,7 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   itemContainer:{
-    backgroundColor: '#fffafa', 
+    backgroundColor: '#f5f5f5', 
     marginVertical: 10,
     paddingVertical: 5,
     borderRadius: 10,

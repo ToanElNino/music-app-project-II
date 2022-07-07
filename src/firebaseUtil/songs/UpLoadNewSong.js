@@ -2,6 +2,7 @@ import { db } from "../../../firebase";
 import { set, ref, getDatabase } from 'firebase/database';
 import { async } from "@firebase/util";
 import { UpdateSongId } from "./SongId";
+import { UpdateSongComment } from "../comments/UpdateSongComment";
 
 function guidGenerator() {
   var S4 = function() {
@@ -26,6 +27,7 @@ export async function UpLoadNewSong(params){
   }).then(()=>{
     console.log('oke')
     UpdateSongId(params.id);
+    UpdateSongComment({songId: params.id + 1, commentList: 'init'});
   }).catch((error)=>{
     console.log('loi: ',error);
   })

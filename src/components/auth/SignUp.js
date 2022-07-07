@@ -16,6 +16,7 @@ import {
 import { CreateNewUser } from '../../firebaseUtil/users/CreateNewUser';
 import { db } from "../../../firebase";
 import { set, ref, getDatabase, onValue } from 'firebase/database';
+import { UpdateFavoriteAlbum } from '../../firebaseUtil/favorite/UpdateFavoriteAlbum';
 export default function SignUpLayout({navigation}) {
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
@@ -41,6 +42,8 @@ export default function SignUpLayout({navigation}) {
         console.log(emailAddress);
         console.log(password);
         CreateNewUser({emailAddress,password, userName, nextId});
+        const list="init";
+        UpdateFavoriteAlbum({nextId,list});
         alert('Sign up sucessful! Welcome to app');
       })
       .catch(error => {

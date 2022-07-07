@@ -6,10 +6,12 @@ import LogOut from './src/components/auth/LogOut';
 import SignUpLayout from './src/components/auth/SignUp';
 import LoginLayout from './src/components/auth/LogIn';
 import Tabs from './src/navigation/tabs';
-import { Provider } from 'react-redux';
-import store from './src/store/index';
 import {useDispatch} from 'react-redux';
 import {login} from './src/reducer/user/userReducer';
+import { db } from './firebase';
+import { set, ref, getDatabase } from 'firebase/database';
+import { onValue } from 'firebase/database';
+
 
 // import { db } from './firebase';
 const Stack = createNativeStackNavigator();
@@ -21,9 +23,24 @@ const App = () => {
   const [user, setUser] = useState();
 
   // Handle user state changes
-  function onAuthStateChanged(user) {
+  async function onAuthStateChanged(user) {
+    console.log('check user: ', user);
     setUser(user);
-    dispatch(login(user))
+    onValue(ref(db, 'users/'), (snapshot) => {
+      const data = snapshot.val();
+      // console.log(data);
+      if(user !=null){
+        for(let user1 in data){
+          if(data[user1].email === user.email){
+            console.log(user1)
+            console.log('same from app: ', data[user1]);
+            dispatch(login(data[user1]));
+            // setUserInfo(data[user]);
+          }
+        }
+      }
+     })
+    // dispatch(login(user))
     if (initializing) setInitializing(false);
   }
 
@@ -35,8 +52,8 @@ const App = () => {
       <NavigationContainer>
         {user ? (
           <Stack.Navigator screenOptions={{
-    headerShown: false
-  }}>
+          headerShown: false
+        }}>
             <Stack.Screen
               name="Log out"
               component={LogOut}
